@@ -7,7 +7,7 @@ export function createPrologue({enter}){
   [5.1,'距离地球四十光年。我的氧气，正在一点点消失。','02 / 失联'],
   [10.2,'但这种蓝色凝胶，能捕获可供呼吸的氧气。','03 / 蓝息质'],
   [14.2,'收集它。把采集罐插回营地。然后接通地球。','04 / 一次回音'],
-  [18.6,'看来，找客服之前，还得先自己发明呼吸。','LAST BREATH BLUE']
+  [18.6,'看来，找客服之前，还得先自己发明呼吸。','EARTH, DO YOU COPY?']
  ];
  function cue(){const t=video.currentTime;const item=[...captions].reverse().find(x=>t>=x[0])||captions[0];$('#prologue-caption').textContent=item[1];$('#prologue-chapter').textContent=item[2];$('#prologue-progress').style.width=`${Number.isFinite(video.duration)?t/video.duration*100:0}%`;}
  function hideBrand(){cancelAnimationFrame(brandFrame);brandFrame=0;overlay.classList.remove('studio-phase');window.dispatchEvent(new CustomEvent('studio-ident',{detail:{active:false}}));}

@@ -41,7 +41,7 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 
 ## 2026-10-15 opening poster
 
-- Willow Lagoon opening key art generated with OpenAI GPT Image 2.5 via Higgsfield. The original 2K PNG is `assets/opening-poster.png`; the page uses an optimized JPEG copy at `assets/opening-poster.jpg`.
+- Superseded opening key art generated with OpenAI GPT Image 2.5 via Higgsfield on October 15. Replaced by the Midjourney artwork below.
 - Generation estimate: 4.5 credits. The poster is original generated artwork; the title is typeset by the page, not baked into the image.
 - The Merouter sound prompt is saved at `assets/willow-lagoon-ambient.prompt.md`. The generated 90-second ElevenLabs Music v1 track is bundled as `assets/willow-lagoon-ambient.mp3` and loops in-game. Local synthesized rain remains a fallback.
 
@@ -82,3 +82,9 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - 雕像打击碎屑复用既有 CC0 岩石资产；原有 Meshy 石膏像和幽默配音保留。
 
 - 英文出品片头：React Bits / David Haz 的 [Stroke Text](https://reactbits.dev/text-animations/stroke-text) 与 [Laser Flow](https://reactbits.dev/animations/laser-flow)，采用同目录 React Bits 许可证。Laser Flow 在片头结束时释放 WebGL 上下文。
+
+## 2026-10-16 · EARTH, DO YOU COPY? opening key art
+
+- Generated through Merouter using `mj-fast-imagine-v8.1`; returned generation prompt confirms `--v 8.1 --ar 16:9` (stylize 350).
+- Selected fourth individual image, 1456 × 816. Original: `assets/opening-poster.png`; optimized web JPEG: `assets/opening-poster.jpg`.
+- Blue-green alien ecology, mineral ruins and an astronaut with oxygen cylinders. Game title is live HTML, not baked into the image.
