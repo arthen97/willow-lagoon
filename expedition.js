@@ -121,7 +121,7 @@ export function createExpedition({walker,state,world,notify,openDialog,resume,am
   if(stage===3)return {title:'密封潮汐气孔，回收高压样本',detail:'按 E 接管，指针进入浅绿色区再按 E。成功三次后回营地插罐。',node:nodes.find(n=>n.id==='vent-a')};
   return {title:stage>=4?'保持呼吸，等待地球回音':'01 / 采集第一份蓝息质',detail:stage>=4?'继续采集与回收，维持营地储备。R 收听地球新闻，J 查看采集笔记。':'跟随标记找到银白植物，展开时保持 E。蓝息质会装入采集罐。',node:nodes.find(n=>n.id==='silver-a')};
  }
- function updateMission(){const o=nextObjective();$('#mission-title').textContent=o.title;$('#mission-detail').textContent=o.detail;$('#sample-count').textContent=`${Math.floor(game.delivered)} L`;}
+ function updateMission(){const o=nextObjective();const phase=o.node?.id==='camp'?(game.cargo>0||walker.oxygen<25?1:2):0;document.querySelectorAll('.mission-steps li').forEach((el,i)=>{el.dataset.active=String(i===phase);if(i===phase)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});$('#mission-title').textContent=o.title;$('#mission-detail').textContent=o.detail;$('#sample-count').textContent=`${Math.floor(game.delivered)} L`;}
  function target(){return nextObjective().node||CAMP;}
  function update(dt){
   if(!started)return;if(state.paused){cancelHarvest();return;}sessionTime+=dt;saveClock+=dt;
@@ -147,5 +147,5 @@ export function createExpedition({walker,state,world,notify,openDialog,resume,am
   $('#biome-label').textContent=Math.abs(walker.actor.position.x+18)<5&&walker.actor.position.z>34?'蓝脉洞窟':walker.actor.position.z>20?'骨帆共生林':'坠落湾 · 零号营地';updateMission();
  }
  addEventListener('pagehide',save);
- updateMission();return {update,interact,strike,target,progress,nodes,game,openJournal,scan,stopVoice,cancelHarvest,deposit,refill,earth,emergency,get sessionTime(){return sessionTime;},get repair(){return !!valve;},setMuted(value){muted=value;if(clip)clip.volume=value?0:.9;ambientSound.setDucked?.(!!clip&&!value);},start(){started=true;speak('campIntro',true);notify(game.relayStage?'远征记录已恢复 · 按当前任务继续行动':'第一步：跟随金色标记，靠近银白植物并保持 E 采集蓝息质。');updateMission();}};
+ updateMission();return {update,interact,strike,target,progress,nodes,game,openJournal,scan,stopVoice,cancelHarvest,deposit,refill,earth,emergency,get sessionTime(){return sessionTime;},get repair(){return !!valve;},setMuted(value){muted=value;if(clip)clip.volume=value?0:.9;ambientSound.setDucked?.(!!clip&&!value);},start(){started=true;speak('campIntro',true);notify(game.relayStage?'远征记录已恢复 · 按当前任务继续行动':'第一步：跟随青色目标标记，靠近银白植物并保持 E 采集蓝息质。');updateMission();}};
 }

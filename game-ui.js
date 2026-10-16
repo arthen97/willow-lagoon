@@ -1,6 +1,6 @@
 import {createPrologue} from './prologue.js?v=20261016-arthen';
 import * as THREE from 'three';
-import {createExpedition} from './expedition.js?v=20261016-blue';
+import {createExpedition} from './expedition.js?v=20261016-teal';
 
 const $=selector=>document.querySelector(selector);
 const MAP={x:-60,z:-24,w:120,h:104};
@@ -71,7 +71,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
   }
   function interact(){expedition.interact();}
   $('#close-opening-guide').onclick=()=>{$('#opening-brief').classList.remove('guide-selected');$('#opening-guide').setAttribute('aria-expanded','false');$('#opening-guide').focus();};
-  $('#start-game').onclick=()=>{if(ready)prologue.requestStart();};$('#watch-story').onclick=()=>prologue.play(false);$('#opening-guide').onclick=()=>{const shown=$('#opening-guide').getAttribute('aria-expanded')!=='true';$('#opening-guide').setAttribute('aria-expanded',String(shown));$('#opening-brief').classList.toggle('guide-selected',shown);};$('#pause').onclick=()=>pause();$('#resume-game').onclick=()=>resume();
+  $('#start-game').onclick=()=>{if(ready)prologue.requestStart();};$('#watch-story').onclick=()=>prologue.play(false);$('#opening-guide').onclick=()=>{const shown=$('#opening-guide').getAttribute('aria-expanded')!=='true';$('#opening-guide').setAttribute('aria-expanded',String(shown));$('#opening-brief').classList.toggle('guide-selected',shown);if(shown)$('#close-opening-guide').focus();};$('#pause').onclick=()=>pause();$('#resume-game').onclick=()=>resume();
   $('#map-toggle').onclick=()=>pause(mapDialog);$('#close-map').onclick=()=>resume();$('#interact').onclick=null;
   $('#sound').onclick=toggleSound;syncSound();
   $('#settings-toggle').onclick=()=>{const open=$('#game-settings').hidden;$('#game-settings').hidden=!open;$('#settings-toggle').setAttribute('aria-expanded',String(open));$('#settings-toggle span').textContent=open?'−':'＋';};
@@ -82,7 +82,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
   for(const dialog of [pauseMenu,mapDialog])dialog.addEventListener('cancel',e=>{e.preventDefault();resume();});
   addEventListener('keydown',e=>{
     if(prologue.active)return;
-    if(!started){const choices=[...document.querySelectorAll('.opening-choice:not(:disabled)')];if(e.code==='ArrowDown'||e.code==='ArrowUp'){e.preventDefault();const i=choices.indexOf(document.activeElement);choices[(i+(e.code==='ArrowDown'?1:-1)+choices.length)%choices.length]?.focus();}else if(e.code==='Enter'&&!e.target.closest('button')){e.preventDefault();if(ready)prologue.requestStart();}return;}
+    if(!started){if($('#opening-brief').classList.contains('guide-selected')){if(e.code==='Escape'){e.preventDefault();$('#close-opening-guide').click();}return;}const choices=[...document.querySelectorAll('.opening-choice:not(:disabled)')];if(e.code==='ArrowDown'||e.code==='ArrowUp'){e.preventDefault();const i=choices.indexOf(document.activeElement);choices[(i+(e.code==='ArrowDown'?1:-1)+choices.length)%choices.length]?.focus();}else if(e.code==='Enter'&&!e.target.closest('button')){e.preventDefault();if(ready)prologue.requestStart();}return;}
     if(credits.open)return;
     if(e.code==='Escape'){
       e.preventDefault();e.stopImmediatePropagation();if(state.paused)resume();else pause();return;
@@ -136,6 +136,8 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     ctx.lineWidth=.7/scale;ctx.strokeStyle='#d2dfbb15';ctx.beginPath();
     for(let x=-60;x<=60;x+=10){ctx.moveTo(x,-24);ctx.lineTo(x,80);}for(let z=-20;z<=80;z+=10){ctx.moveTo(-60,z);ctx.lineTo(60,z);}ctx.stroke();
     for(const node of expedition.nodes){if(!expedition.progress.discovered.has(node.id)&&node.id!=='camp')continue;ctx.save();ctx.translate(node.x,node.z);ctx.rotate(Math.PI/4);ctx.fillStyle=expedition.progress.activated.has(node.id)?'#97d2b7':node.type==='plant'?'#a9c0a2':'#d9ba7d';ctx.fillRect(-4/scale,-4/scale,8/scale,8/scale);ctx.restore();if(expanded&&node.type!=='plant'){const label={trump:'01 记忆碑',ronaldo:'02 永不退役',lebron:'03 净水台',musk:'04 冥王星',relay:'旧终端',camp:'⌂ 零号营地','cave-siphon':'蓝脉洞窟','vent-a':'潮汐气孔','lung-a':'共生肺囊','lung-b':'骨林肺囊','wreck-tank':'残骸氧气罐'}[node.id]||node.name;ctx.font=`${11/scale}px sans-serif`;ctx.fillText(label,node.x+7/scale,node.z+13/scale);}}
+    const goal=expedition.target();
+    if(goal){ctx.save();ctx.strokeStyle='#83f5df';ctx.fillStyle='#83f5df';ctx.lineWidth=2/scale;ctx.beginPath();ctx.arc(goal.x,goal.z,9/scale,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(goal.x,goal.z,3/scale,0,Math.PI*2);ctx.fill();if(expanded){ctx.font=`${12/scale}px sans-serif`;ctx.fillText('当前目标 · '+goal.name,goal.x+13/scale,goal.z-9/scale);}ctx.restore();}
     ctx.save();ctx.translate(p.x,p.z);ctx.rotate(-walker.actor.rotation.y);ctx.fillStyle='#e9efdb12';ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,20/scale,-Math.PI*.7,-Math.PI*.3);ctx.closePath();ctx.fill();
     ctx.fillStyle='#f1efdc';ctx.strokeStyle='#17291d';ctx.lineWidth=1.5/scale;ctx.beginPath();ctx.moveTo(0,-7/scale);ctx.lineTo(5/scale,5/scale);ctx.lineTo(0,2/scale);ctx.lineTo(-5/scale,5/scale);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
     if(expanded){ctx.font=`${13/scale}px sans-serif`;ctx.fillStyle='#d9ba7d';ctx.fillStyle='#a7bdaf';ctx.font=`${16/scale}px sans-serif`;ctx.fillText('潮 汐 湖',-23,-17);ctx.fillStyle='#dce4cf';ctx.fillText('N',53,-17);}
@@ -150,7 +152,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     }
     const goal=expedition.target();if(!goal)return;const angle=Math.atan2(goal.x-walker.actor.position.x,-(goal.z-walker.actor.position.z))*180/Math.PI;
     const delta=((angle-heading+540)%360)-180;
-    if(Math.abs(delta)<64){ctx.save();ctx.translate(w/2+delta*5.4,85);ctx.rotate(Math.PI/4);ctx.fillStyle='#d9ba7d';ctx.fillRect(-3,-3,6,6);ctx.restore();}
+    if(Math.abs(delta)<64){ctx.save();ctx.translate(w/2+delta*5.4,85);ctx.rotate(Math.PI/4);ctx.fillStyle='#83f5df';ctx.fillRect(-4,-4,8,8);ctx.restore();}
   }
   function updateHud(){
     camera.getWorldDirection(direction);const heading=(Math.atan2(direction.x,-direction.z)*180/Math.PI+360)%360;
@@ -164,11 +166,26 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     expedition.update(dt);
     hudTime+=dt;if(hudTime>.12){hudTime=0;updateHud();}
     const goal=expedition.target();if(!goal){$('#waypoint').style.display='none';return;}
-    $('#waypoint-name').textContent=goal.name;$('#waypoint-distance').textContent=Math.round(Math.hypot(goal.x-walker.actor.position.x,goal.z-walker.actor.position.z))+' m';
-    projected.set(goal.x,groundHeight(goal.x,goal.z)+1.2,goal.z).project(camera);
-    const visible=projected.z>-1&&projected.z<1&&Math.abs(projected.x)<.92&&Math.abs(projected.y)<.82;
-    $('#waypoint').style.display=visible?'flex':'none';
-    if(visible)$('#waypoint').style.transform=`translate(${(projected.x*.5+.5)*innerWidth}px,${(-projected.y*.5+.5)*innerHeight}px) translate(-50%,-100%)`;
+    const distance=Math.hypot(goal.x-walker.actor.position.x,goal.z-walker.actor.position.z);
+    camera.getWorldDirection(direction);
+    const heading=Math.atan2(direction.x,-direction.z),bearing=Math.atan2(goal.x-walker.actor.position.x,-(goal.z-walker.actor.position.z));
+    const delta=Math.atan2(Math.sin(bearing-heading),Math.cos(bearing-heading));
+    const near=distance<2.7,behind=Math.abs(delta)>Math.PI*.65;
+    $('#waypoint-name').textContent=goal.name;$('#waypoint-distance').textContent=near?'已抵达':Math.round(distance)+' m';
+    $('#navigation-turn').textContent=near?'◎':behind?(delta>0?'↷':'↶'):Math.abs(delta)<.25?'↑':delta>0?'→':'←';
+    $('#navigation-text').textContent=near?'已到达 · 按下方提示操作':behind?'目标在身后 · '+(delta>0?'向右回转':'向左回转'):Math.abs(delta)<.25?'前往 '+goal.name:(delta>0?'向右转 · ':'向左转 · ')+goal.name;
+    $('#navigation-distance').textContent=Math.round(distance)+' m';
+    $('#navigation-cue').classList.toggle('arrived',near);
+    projected.set(goal.x,groundHeight(goal.x,goal.z)+1.8,goal.z).project(camera);
+    const visible=projected.z>-1&&projected.z<1&&Math.abs(projected.x)<.78&&Math.abs(projected.y)<.60;
+    const marker=$('#waypoint');marker.style.display='flex';marker.classList.toggle('offscreen',!visible);marker.classList.toggle('arrived',near);
+    $('#waypoint-turn').textContent=visible?'任务目标':behind?'回转寻找目标':delta>0?'目标在右侧':'目标在左侧';
+    // Off-screen targets stay on a safe side edge, including targets behind the camera.
+    const x=visible?(projected.x*.5+.5)*innerWidth:delta>=0?innerWidth-Math.min(90,innerWidth*.18):Math.min(90,innerWidth*.18);
+    const y=visible?Math.max(185,Math.min(innerHeight*.70,(-projected.y*.5+.5)*innerHeight)):innerHeight*.60;
+    marker.style.setProperty('--target-arrow',`${delta>=0?45:-135}deg`);
+    marker.style.transform=`translate(${x}px,${y}px) translate(-50%,-100%)`;
+
   }
   return {update,start,pause,resume,interact,expedition,get started(){return started;},ready(){ready=true;$('#start-game').disabled=false;$('#start-label').textContent='开始远征';$('#loading-text').textContent='生命维持在线 · 可以出发';}};
 }
