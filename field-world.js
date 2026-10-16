@@ -23,7 +23,7 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
  const rack=[];for(let i=0;i<3;i++)rack.push(put('oxygen-tank',CAMP.x-2.0+i*.45,CAMP.z+1.3,.95,Math.PI));
  put('collector',CAMP.x+2.0,CAMP.z+1,.6,Math.PI);
  const sign=label('零号营地','保持 E 插罐  /  H 补给  /  R 通信');sign.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.9,CAMP.z+1.5);
- const campLight=new THREE.PointLight(0xffc28b,12,9,2);campLight.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.4,CAMP.z);group.add(campLight);
+ const campLight=new THREE.PointLight(0xffd2a5,5,6,2);campLight.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.4,CAMP.z);group.add(campLight);
  walker.obstacles.push({x:CAMP.x,z:CAMP.z+2,r:1.6,h:2.8},{x:CAMP.x-1.6,z:CAMP.z+1.3,r:.65,h:.95});
  // Rigid imported equipment follows the existing attachment bones.
  const carry=new THREE.Group();carry.name='CARRIED_OXYGEN_CYLINDERS';walker.actor.add(carry);
@@ -41,8 +41,8 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
  // Derive side blockers from the imported cave wall at body height.
  const ray=new THREE.Raycaster();for(let z=35;z<=51;z+=.65)for(const side of[-1,1]){ray.set(new THREE.Vector3(CAVE.x,cavern.position.y+1.1,z),new THREE.Vector3(side,0,0));const hit=ray.intersectObject(cavern,true)[0];if(hit&&hit.distance<8)walker.obstacles.push({x:hit.point.x,z,r:.36,h:6});}
  const caveSign=label('蓝脉洞窟','避风  /  放置抽气器，再回来收罐',2.6);caveSign.position.set(CAVE.x-3.6,groundHeight(CAVE.x,CAVE.z)+1.5,33.6);caveSign.rotation.y=Math.PI+.3;
- for(let k=0;k<3;k++){const l=new THREE.PointLight(0x71c7be,9,10,2);l.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)+1.8,38+k*4);group.add(l);}
- for(let k=0;k<8;k++){const colony=put('fan-plant',CAVE.x+Math.sin(k*2.9)*3.2,37+k*1.6,.3+(k%3)*.12,k);materials(colony,m=>{m.emissive.setHex(0x57d7ca);m.emissiveMap=m.map;m.emissiveIntensity=2.2;});}
+ for(let k=0;k<3;k++){const l=new THREE.PointLight(0x9acbc3,4,7,2);l.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)+1.8,38+k*4);group.add(l);}
+ for(let k=0;k<8;k++){const colony=put('fan-plant',CAVE.x+Math.sin(k*2.9)*3.2,37+k*1.6,.3+(k%3)*.12,k);materials(colony,m=>{m.emissive.setHex(0x57d7ca);m.emissiveMap=m.map;m.emissiveIntensity=1.15;});}
  // Real scanned CC0 cliff meshes form the mountains around the open basin.
  const cliffs=[[-43,32,19,Math.PI/2],[-46,65,25,Math.PI/2],[43,35,20,-Math.PI/2],[46,68,24,-Math.PI/2],[-13,83,27,Math.PI],[22,87,23,Math.PI],[-26,46,10,Math.PI/2],[-9,48,9,-Math.PI/2]];
  for(const[x,z,h,r]of cliffs){const o=put('coastal-cliff',x,z,h,r,-2.8);o.name='CC0_SCANNED_MOUNTAIN';if(Math.abs(x)<30&&z<60)o.scale.x*=.2;if(z<70&&Math.abs(x)>30)for(let dz=-14;dz<=14;dz+=3)walker.obstacles.push({x,z:z+dz,r:3,h:40});}

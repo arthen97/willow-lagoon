@@ -88,3 +88,7 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - Generated through Merouter using `mj-fast-imagine-v8.1`; returned generation prompt confirms `--v 8.1 --ar 16:9` (stylize 350).
 - Selected fourth individual image, 1456 × 816. Original: `assets/opening-poster.png`; optimized web JPEG: `assets/opening-poster.jpg`.
 - Blue-green alien ecology, mineral ruins and an astronaut with oxygen cylinders. Game title is live HTML, not baked into the image.
+
+## 2026-10-16 · Social introduction image
+
+- `assets/social/earth-do-you-copy-intro.jpg`: promotional layout made with the built-in image-generation tool, using this project’s Merouter Midjourney 8.1 cover as reference. Chinese typography explains the gameplay loop. Marked as concept artwork, not a gameplay screenshot.

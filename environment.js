@@ -26,18 +26,18 @@ export async function enrichEnvironment(ctx) {
   }
   boatRough.flipY=old.map.flipY;
   const soil=new THREE.MeshPhysicalMaterial({map:color,normalMap:normal,roughnessMap:rough,
-    color:new THREE.Color(.72,.91,.88),roughness:.96,metalness:0,normalScale:new THREE.Vector2(.42,.42),
-    envMapIntensity:.5,clearcoat:.10,clearcoatRoughness:.42});
+    color:new THREE.Color(.91,.88,.81),roughness:.96,metalness:0,normalScale:new THREE.Vector2(.42,.42),
+    envMapIntensity:.4,clearcoat:.035,clearcoatRoughness:.65});
   soil.onBeforeCompile=s=>{
     s.vertexShader='varying vec3 vSoil;\n'+s.vertexShader;
     s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvSoil=position;');
     s.fragmentShader='varying vec3 vSoil;\n'+noiseGLSL+'\n'+s.fragmentShader;
     s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',
-      '#include <map_fragment>\nfloat soilPatch=fbm(vSoil.xz*.65); float wet=1.-smoothstep(.01,.23,vSoil.y); float soilLuma=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722)); vec3 mineral=soilLuma*mix(vec3(.38,1.12,1.04),vec3(.70,1.04,1.16),smoothstep(.34,.70,soilPatch)); diffuseColor.rgb=mix(diffuseColor.rgb,mineral,.68); diffuseColor.rgb*=mix(.80,1.16,smoothstep(.26,.75,soilPatch)); diffuseColor.rgb*=1.-wet*.18;');
+      '#include <map_fragment>\nfloat soilPatch=fbm(vSoil.xz*.65); float wet=1.-smoothstep(.01,.23,vSoil.y); diffuseColor.rgb*=mix(vec3(.82,.88,.74),vec3(1.06,1.00,.91),smoothstep(.30,.72,soilPatch)); diffuseColor.rgb*=1.-wet*.20;');
     s.fragmentShader=s.fragmentShader.replace('#include <roughnessmap_fragment>',
       '#include <roughnessmap_fragment>\nroughnessFactor=clamp(roughnessFactor*.7+.27,.57,.98); roughnessFactor=mix(roughnessFactor,.42,wet*.55);');
   };
-  soil.customProgramCacheKey=()=> 'soil-teal-detail-v5';
+  soil.customProgramCacheKey=()=> 'soil-natural-detail-v6';
   ground.material=soil;
   model.traverse(o=>{
     if(!o.isMesh)return;
@@ -71,7 +71,7 @@ export async function enrichEnvironment(ctx) {
   const meadowAsset=(await ctx.loader.loadAsync('./assets/grass/grass.gltf')).scene;
   meadowAsset.updateMatrixWorld(true);let grassSource;meadowAsset.traverse(o=>{if(o.isMesh&&!grassSource)grassSource=o;});
   const blade=grassSource.geometry.clone().applyMatrix4(grassSource.matrixWorld);blade.computeBoundingBox();const bounds=blade.boundingBox,center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());blade.translate(-center.x,-bounds.min.y,-center.z);blade.scale(.35/size.y,.35/size.y,.35/size.y);
-  const grassMat=windMaterial(grassSource.material.clone(),'grass');grassMat.color.setHex(0x91d9c7);grassMat.roughness=.94;grassMat.envMapIntensity=.35;grassMat.side=THREE.DoubleSide;
+  const grassMat=windMaterial(grassSource.material.clone(),'grass');grassMat.color.setHex(0xc4cfb2);grassMat.roughness=.94;grassMat.envMapIntensity=.35;grassMat.side=THREE.DoubleSide;
   const list=[];
   for(let k=0;k<2600;k++){
     const near=k<1300,x=near?-20+rand()*35:-56+rand()*112,z=near?-2.8+rand()*16:-14+rand()*90,h=groundHeight(x,z);
@@ -92,7 +92,7 @@ export async function enrichEnvironment(ctx) {
     const meadow=new THREE.InstancedMesh(blade,grassMat,entries.length);
     entries.forEach(([x,y,z,s,a,c],i)=>{
       dummy.position.set(x,y,z);dummy.rotation.set((rand()-.5)*.48,a,(rand()-.5)*.35);dummy.scale.set(.7+rand()*.8,s,s);dummy.updateMatrix();meadow.setMatrixAt(i,dummy.matrix);
-      meadow.setColorAt(i,new THREE.Color().setRGB(.58+c*.23,.83+c*.17,.79+c*.20));
+      meadow.setColorAt(i,new THREE.Color().setRGB(.78+c*.18,.82+c*.18,.70+c*.17));
     });
     meadow.name='CLUSTERED_MEADOW_'+key;meadow.receiveShadow=true;meadow.computeBoundingSphere();scene.add(meadow);
   }
