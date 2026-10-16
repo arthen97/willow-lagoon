@@ -11,10 +11,11 @@ export function stylizeMaterials(scene){
    seen.add(material);material.userData.inkPaint=true;
    const foliage=material.alphaTest>0||/LEAF|MEADOW|GRASS/i.test(object.name+' '+material.name);
    const baseCompile=material.onBeforeCompile,baseKey=material.customProgramCacheKey();
-   material.roughness=.94;material.metalness=Math.min(material.metalness,.06);
-   material.roughnessMap=null;material.metalnessMap=null;material.envMapIntensity=.18;
-   if('clearcoat'in material)material.clearcoat=0;
-   material.normalScale?.multiplyScalar(.16);material.aoMapIntensity=Math.min(material.aoMapIntensity??1,.40);
+   // Keep authored PBR maps and coatings: a tank, visor and wet soil must respond differently.
+   if(foliage)material.roughness=Math.max(material.roughness,.82);
+   material.envMapIntensity=Math.max(material.envMapIntensity??1,.65);
+   material.normalScale?.multiplyScalar(foliage?.35:.65);
+   material.aoMapIntensity=Math.min(material.aoMapIntensity??1,.75);
    material.onBeforeCompile=function(shader,renderer){
     baseCompile.call(this,shader,renderer);
     // Sample coarser colour detail before painting broad tonal areas; alpha edges stay crisp.
@@ -25,16 +26,18 @@ export function stylizeMaterials(scene){
      diffuseColor.rgb*=clamp(paintValue/max(paintLuma,.035),.78,1.22);
      diffuseColor.rgb=mix(vec3(paintValue),diffuseColor.rgb,1.08);
     `);
-    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`
-     vec3 inkDiffuse=reflectedLight.directDiffuse+reflectedLight.indirectDiffuse;
-     float inkIllum=dot(inkDiffuse,vec3(.2126,.7152,.0722))/max(dot(diffuseColor.rgb,vec3(.2126,.7152,.0722)),.025);
-     float inkBands=.34+.24*smoothstep(.17,.25,inkIllum)+.28*smoothstep(.47,.57,inkIllum)+.27*smoothstep(.88,1.02,inkIllum);
-     vec3 inkShadow=mix(vec3(.76,.86,1.0),vec3(1.0),smoothstep(.2,.75,inkIllum));
-     outgoingLight=max(vec3(0.),diffuseColor.rgb)*inkBands*inkShadow+totalEmissiveRadiance;
-     #include <opaque_fragment>
+    // Paint diffuse BEFORE transmission, specular, sheen and clearcoat are composed by Three.
+    // Scaling the actual light keeps cast shadows and metallic energy conservation intact.
+    const diffuseLine='vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;';
+    shader.fragmentShader=shader.fragmentShader.replace(diffuseLine,diffuseLine+`
+     float inkIllum=dot(totalDiffuse,vec3(.2126,.7152,.0722))/max(dot(material.diffuseColor,vec3(.2126,.7152,.0722)),.025);
+     float inkBands=.08+.20*smoothstep(.14,.22,inkIllum)+.28*smoothstep(.40,.50,inkIllum)+.32*smoothstep(.72,.84,inkIllum)+.30*smoothstep(1.05,1.19,inkIllum);
+     float inkRatio=mix(1.0,clamp(inkBands/max(inkIllum,.025),.72,1.22),.65);
+     vec3 inkShadow=mix(vec3(.91,.96,1.0),vec3(1.0),smoothstep(.12,.65,inkIllum));
+     totalDiffuse*=inkRatio*inkShadow;
     `);
    };
-   material.customProgramCacheKey=()=>baseKey+'|painted-cel-v1|'+foliage;
+   material.customProgramCacheKey=()=>baseKey+'|painted-cel-pbr-v2|'+foliage;
    material.needsUpdate=true;
   }
  });

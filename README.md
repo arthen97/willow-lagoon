@@ -93,3 +93,7 @@ Removed the added offshore scan slabs and the detached outer ring of cliffs. The
 ### 2026-10-17 · Painted cel shading and ink contours
 
 Hand-painted ground albedo replaces the photographic ground colour map. Standard and physical materials retain their existing texture identity but use softened colour detail, suppressed surface micro-normal/specular noise and stepped diffuse lighting. A depth-aware post-process adds restrained silhouette strokes, with lighter foliage lines and distance fade; strength is adjustable in settings. Water colours use a gentle painted tonal treatment. All movement, terrain heights, collisions, oxygen rules, bone animation and simulation modules are unchanged.
+
+### 2026-10-17 · Lit ink materials
+
+Cel shading now modifies only diffuse lighting before Three composes specular, transmission, sheen and clearcoat. Authored roughness/metalness maps and wet-surface coatings remain active; shadow response no longer has an artificial brightness floor. The overcast HDR is prefiltered with PMREM for environment reflections and subtly blended into the atmospheric sky. Default environment intensity is 0.52 and bloom is 0.32 with a 1.10 HDR threshold, retaining subdued exposure and the ink contours. This change touches rendering only; simulation and gameplay files are unchanged.
