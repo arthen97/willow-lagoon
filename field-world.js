@@ -43,25 +43,20 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
  const caveSign=label('蓝脉洞窟','避风  /  放置抽气器，再回来收罐',2.6);caveSign.position.set(CAVE.x-3.6,groundHeight(CAVE.x,CAVE.z)+1.5,33.6);caveSign.rotation.y=Math.PI+.3;
  for(let k=0;k<3;k++){const l=new THREE.PointLight(0x9acbc3,4,7,2);l.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)+1.8,38+k*4);group.add(l);}
  for(let k=0;k<8;k++){const colony=put('fan-plant',CAVE.x+Math.sin(k*2.9)*3.2,37+k*1.6,.3+(k%3)*.12,k);materials(colony,m=>{m.emissive.setHex(0x57d7ca);m.emissiveMap=m.map;m.emissiveIntensity=1.15;});}
- // Keep the scanned cliff's natural proportions, but bound its footprint.
- // This source is almost nine times wider than tall: height alone cannot size a backdrop.
- function landscapeCliff(x,z,height,rotation,maxSpan,name){
-  const o=put('coastal-cliff',x,z,height,rotation,-3);
+ // The original ISLAND mesh is one continuous landform across the lake.
+ // Do not add isolated scan slabs offshore or beyond the walkable ground edge.
+ // Two modest, buried outcrops tie the cave walls into the existing terrain.
+ function caveOutcrop(x,z,height,rotation,maxSpan){
+  const o=put('coastal-cliff',x,z,height,rotation,0);
   const size=new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
-  o.scale.multiplyScalar(Math.min(1,maxSpan/Math.max(size.x,size.z)));
-  o.name=name;o.updateMatrixWorld(true);return o;
+  const factor=Math.min(1,maxSpan/Math.max(size.x,size.z));
+  o.scale.multiplyScalar(factor);
+  o.position.y=groundHeight(x,z)-size.y*factor*.38;
+  o.name='CC0_EMBEDDED_CAVE_ROCK';o.updateMatrixWorld(true);
+  materials(o,m=>{m.roughness=Math.max(.88,m.roughness);m.envMapIntensity=.38;});
  }
- for(const[x,z,h,r]of[[-90,70,16,Math.PI/2],[-108,138,22,Math.PI/2],[92,78,17,-Math.PI/2],[118,145,21,-Math.PI/2],[-24,165,20,Math.PI],[55,180,18,Math.PI]]){
-  landscapeCliff(x,z,h,r,105,'CC0_OUTER_ISLAND_RIDGE');
- }
- // Low outcrops frame the playable cave; the imported chamber supplies its actual walls.
- landscapeCliff(-26,46,10,Math.PI/2,32,'CC0_CAVE_OUTCROP');
- landscapeCliff(-9,48,9,-Math.PI/2,28,'CC0_CAVE_OUTCROP');
- // Leave an uninterrupted lake and sky between the player and the distant shoreline.
- for(const[x,z,h,r]of[[-430,-1050,60,.12],[420,-1250,80,-.15],[-780,-1500,95,.25]]){
-  const o=landscapeCliff(x,z,h,r,650,'CC0_DISTANT_SHORE');o.position.y=-8;
-  o.traverse(mesh=>{if(mesh.isMesh){mesh.castShadow=false;mesh.receiveShadow=false;}});
- }
+ caveOutcrop(-26,45,4.2,1.47,25);
+ caveOutcrop(-10,49,3.1,1.30,20);
  const colonies=[[-12,10,2.2],[-22,18,3.2],[8,21,2.6],[18,24,3.5],[-26,29,4],[23,42,4.8],[-7,44,2.8],[7,48,5],[20,15,2.4],[-29,38,3.4]];
  for(const[x,z,h]of colonies){put('fan-plant',x,z,h,x*.6);walker.obstacles.push({x,z,r:.35,h});}
  const trail=label('营地 ←    洞窟 ↑','先观察，再取用。别把肺交给广告。',2.4);trail.position.set(-8,groundHeight(-8,24)+1.2,24);

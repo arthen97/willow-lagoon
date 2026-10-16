@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-import {createFieldWorld} from './field-world.js?v=20261016-horizon';
-import {createCinematic} from './cinematic.js?v=20261016-horizon';
+import {createFieldWorld} from './field-world.js?v=20261017-overcast';
+import {createCinematic} from './cinematic.js?v=20261017-overcast';
 import {expandedHeight,expandGround} from './terrain.js?v=20261015-1';
 import {createFishSchools} from './fish.js?v=20261016-camp';
 import {createAmbientSound} from './audio.js?v=20261016-arthen';
-import {enrichEnvironment} from './environment.js?v=20261016-horizon';
+import {enrichEnvironment} from './environment.js?v=20261017-overcast';
 import {createWalker} from './walker.js?v=20261016-camp';
-import {createStoryWorld} from './story-world.js?v=20261016-horizon';
+import {createStoryWorld} from './story-world.js?v=20261017-overcast';
 import {createGameUI} from './game-ui.js?v=20261016-mj81';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -19,12 +19,12 @@ import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 import {SMAAPass} from 'three/addons/postprocessing/SMAAPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-const $=s=>document.querySelector(s),state={time:0,paused:true,weather:.65,fire:1,key:3.2,exposure:1,bloom:.28,compare:false,preset:'ember'};
+const $=s=>document.querySelector(s),state={time:0,paused:true,weather:.65,fire:1,key:1.8,exposure:.85,bloom:.22,compare:false,preset:'ember'};
 const ambientSound=createAmbientSound();
 const timeU={value:0},weatherU={value:.65};let seed=81923;function rand(){seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;}const gauss=()=>Math.sqrt(-2*Math.log(Math.max(.00001,rand())))*Math.cos(rand()*Math.PI*2);
 const scene=new THREE.Scene();scene.fog=new THREE.Fog(0x839ba5,45,3500);let renderer;
 try{renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance',preserveDrawingBuffer:true});}catch(e){$('#loading-text').textContent='浏览器无法启用 WebGL。请启用硬件加速后重新打开。';throw e;}
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#stage').appendChild(renderer.domElement);
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=state.exposure;renderer.outputColorSpace=THREE.SRGBColorSpace;$('#stage').appendChild(renderer.domElement);
 renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();$('#status').textContent='图形设备已暂停，请刷新页面';});
 const camera=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.08,6500),controls=new OrbitControls(camera,renderer.domElement);Object.assign(controls,{enableDamping:true,dampingFactor:.065,minDistance:5,maxDistance:100,maxPolarAngle:Math.PI*.485,minPolarAngle:.42,panSpeed:.38,rotateSpeed:.3});
 function home(){controls.minPolarAngle=.42;controls.minDistance=5;const mobile=innerWidth/innerHeight<1;camera.fov=mobile?72:40;camera.updateProjectionMatrix();camera.position.set(0,mobile?3.3:2.35,mobile?15:13.7);controls.target.set(0,2.1,-4);controls.update();}home();
@@ -32,7 +32,7 @@ const skyfill=new THREE.HemisphereLight(0xc1d0d7,0x514b3b,.42);scene.add(skyfill
 const key=new THREE.DirectionalLight(0xc5e4ff,state.key);key.position.set(-9,10,-7);key.target.position.set(-1,0,0);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-13,right:13,top:12,bottom:-12,near:.5,far:65});key.shadow.bias=-.00018;key.shadow.normalBias=.035;key.shadow.radius=4;scene.add(key,key.target);
 const dawnLight=new THREE.DirectionalLight(0xffd8ad,.32);dawnLight.position.set(-30,28,-18);dawnLight.target.position.set(0,0,0);scene.add(dawnLight,dawnLight.target);const edgeLight=new THREE.DirectionalLight(0xeab782,.75);edgeLight.position.set(13,7,-10);scene.add(edgeLight);const frontfill=new THREE.DirectionalLight(0x8fb7c6,.32);frontfill.position.set(-4,4,9);scene.add(frontfill);
 const fireLight=new THREE.PointLight(0xff9a45,320,12,2);fireLight.position.set(3.9,1.25,.10);fireLight.castShadow=false;fireLight.shadow.mapSize.set(512,512);fireLight.shadow.bias=-.002;fireLight.shadow.normalBias=.02;fireLight.shadow.camera.near=.15;scene.add(fireLight);const fireBounce=new THREE.PointLight(0xff6520,75,8,2);fireBounce.position.set(3.7,.35,.9);scene.add(fireBounce);
-const composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.28,.30,1.35);composer.addPass(bloom);
+const composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.22,.30,1.35);composer.addPass(bloom);
 const motionBlur=new ShaderPass({uniforms:{tDiffuse:{value:null},direction:{value:new THREE.Vector2(0,1)},strength:{value:0},resolution:{value:new THREE.Vector2()}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:`uniform sampler2D tDiffuse;uniform vec2 direction;uniform float strength;uniform vec2 resolution;varying vec2 vUv;void main(){vec4 center=texture2D(tDiffuse,vUv);if(strength<.1){gl_FragColor=center;return;}vec2 stepUv=normalize(direction)*strength/resolution;vec4 color=center*.28;color+=(texture2D(tDiffuse,vUv+stepUv*.333)+texture2D(tDiffuse,vUv-stepUv*.333))*.16;color+=(texture2D(tDiffuse,vUv+stepUv*.667)+texture2D(tDiffuse,vUv-stepUv*.667))*.11;color+=(texture2D(tDiffuse,vUv+stepUv)+texture2D(tDiffuse,vUv-stepUv))*.09;float backgroundMask=smoothstep(.09,.24,length((vUv-vec2(.5,.5))*vec2(1.,.82)));gl_FragColor=mix(center,color,backgroundMask*.65);}`});renderer.getDrawingBufferSize(motionBlur.uniforms.resolution.value);composer.addPass(motionBlur);
 const grade=new ShaderPass({uniforms:{tDiffuse:{value:null},strength:{value:1}},vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',fragmentShader:`uniform sampler2D tDiffuse;uniform float strength;varying vec2 vUv;void main(){vec3 c=texture2D(tDiffuse,vUv).rgb;float l=dot(c,vec3(.2126,.7152,.0722));vec3 graded=c*mix(vec3(.88,.98,1.08),vec3(1.00,1.01,1.025),smoothstep(.10,1.3,l));float gradeLuma=dot(graded,vec3(.2126,.7152,.0722));graded=max(vec3(0.),mix(vec3(gradeLuma),graded,1.04));float vig=1.0-.15*pow(length((vUv-.5)*vec2(1.,.84))*1.3,1.8);gl_FragColor=vec4(mix(c,graded*vig,strength),1.0);}`});composer.addPass(grade);composer.addPass(new OutputPass());composer.addPass(new SMAAPass());
 const draco=new DRACOLoader().setDecoderPath('./node_modules/three/examples/jsm/libs/draco/gltf/').setDecoderConfig({type:'js'}).setWorkerLimit(2);const loader=new GLTFLoader().setDRACOLoader(draco);let model,boat,water,layout,flame,environment,walker,fishSchools,gameUI,cinematic,birds=[];
@@ -92,7 +92,7 @@ function updateBirds(time){
 }
 
 function createMist(){const geo=new THREE.PlaneGeometry(1,1),mat=new THREE.ShaderMaterial({uniforms:{uTime:timeU},transparent:true,depthWrite:false,side:THREE.DoubleSide,vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:`uniform float uTime;varying vec2 vUv;${noiseGLSL}void main(){float n=fbm(vec2(vUv.x*8.-uTime*.012,vUv.y*3.));float edge=smoothstep(0.,.25,vUv.x)*smoothstep(1.,.75,vUv.x)*pow(sin(vUv.y*3.14159),2.);gl_FragColor=vec4(.55,.62,.65,n*edge*.12);}`});for(let i=0;i<4;i++){const p=new THREE.Mesh(geo,mat);p.position.set(160+i*25,30+i*28,-1000-i*95);p.scale.set(1100-i*60,80,1);scene.add(p);}}
-function applyLook(){const flat=state.compare,day=state.preset==='day';key.intensity=flat?0:state.key;dawnLight.color.setHex(0xafcadb);dawnLight.intensity=flat?.12:day?.32:.26;edgeLight.intensity=0;frontfill.intensity=0;skyfill.intensity=flat?1.1:day?.55:.42;scene.environmentIntensity=flat?.9:day?.58:.45;scene.backgroundIntensity=flat?.82:day?.74:.35;renderer.toneMappingExposure=state.exposure;grade.uniforms.strength.value=flat?0:day?.35:.55;bloom.strength=flat?.02:state.bloom;bloom.enabled=state.bloom>0;scene.fog.color.set(flat?0x9da6aa:0x8299ab);weatherU.value=state.weather;if(flame)flame.material.uniforms.uFire.value=state.fire;}
+function applyLook(){const flat=state.compare,day=state.preset==='day';key.intensity=flat?0:state.key;dawnLight.color.setHex(0xafcadb);dawnLight.intensity=flat?.10:day?.20:.12;edgeLight.intensity=0;frontfill.intensity=0;skyfill.intensity=flat?1.1:day?.38:.28;scene.environmentIntensity=flat?.9:day?.42:.30;scene.backgroundIntensity=flat?.82:day?.74:.35;renderer.toneMappingExposure=state.exposure;grade.uniforms.strength.value=flat?0:day?.35:.55;bloom.strength=flat?.02:state.bloom;bloom.enabled=state.bloom>0;scene.fog.color.set(flat?0x9da6aa:0x6c8194);weatherU.value=state.weather;if(flame)flame.material.uniforms.uFire.value=state.fire;}
 const screenMotion=new THREE.Vector2(),motionRight=new THREE.Vector3(),motionUp=new THREE.Vector3();let blurStrength=0,last=performance.now(),fpsTime=0,frameCount=0;
 function animate(now=performance.now()){
   requestAnimationFrame(animate);const elapsed=(now-last)/1000,dt=Math.min(elapsed,.12);last=now;if(document.body.classList.contains('prologue-playing'))return;if(!state.paused)state.time+=dt;timeU.value=state.time;
@@ -110,7 +110,7 @@ function animate(now=performance.now()){
   renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=(frameCount%(walker?.enabled?2:8)===0);composer.render();frameCount++;fpsTime+=elapsed;
   if(fpsTime>2){$('#status').textContent=`实时 WebGL · ${Math.round(frameCount/fpsTime)} FPS`;window.__LAGOON_FPS__=Math.round(frameCount/fpsTime);frameCount=0;fpsTime=0;}
 }
-function syncUI(){for(const id of ['exposure','weather','bloom']){$('#'+id).value=state[id];$('#'+id+'-value').textContent=id!=='exposure'?Math.round(state[id]*100)+'%':state[id].toFixed(1);}}
+function syncUI(){for(const id of ['exposure','weather','bloom']){$('#'+id).value=state[id];$('#'+id+'-value').textContent=id!=='exposure'?Math.round(state[id]*100)+'%':state[id].toFixed(2);}}
 for(const id of ['exposure','weather','bloom'])$('#'+id).oninput=e=>{state[id]=Number(e.target.value);syncUI();applyLook();};
 addEventListener('pagehide',()=>ambientSound.dispose(),{once:true});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);renderer.getDrawingBufferSize(motionBlur.uniforms.resolution.value);});

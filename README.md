@@ -85,3 +85,7 @@ React Bits Tech Text 的来源及许可证见资产说明。运行 `node scripts
 ### Horizon, cool atmosphere and bird flocks
 
 Moved the added distant cliff meshes to 1.05–1.5 km away; bounded the footprint of wide scanned cliff assets near the island and cave. Preserved the original distant island. Cooler daylight, sky and shadows retain natural terrain colors. The existing bird silhouettes now form three continuous orbiting flocks (24 birds). English promotional artwork: `assets/social/earth-do-you-copy-intro-en.jpg`.
+
+### 2026-10-17 · Continuous shoreline and subdued overcast light
+
+Removed the added offshore scan slabs and the detached outer ring of cliffs. The original complete island asset provides the lake horizon. Two small cave outcrops are embedded 38% of their actual height into the terrain. Reduced sun intensity 3.2 → 1.8, default exposure 1.00 → 0.85, ambient environment 0.45 → 0.30 and bloom 0.28 → 0.22; darkened the sky and haze consistently. Bird flocks and the English poster are retained.
