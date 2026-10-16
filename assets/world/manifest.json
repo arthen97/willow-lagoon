@@ -75,5 +75,21 @@
     "license": "CC0-1.0",
     "url": "https://opengameart.org/content/3td-cave-pack-pro-v10",
     "sha256": "17131f2a19cadc37e356f6bfb1fa96e4aa02f8070de2d1e5db5fb116b0f9ed1e"
+  },
+  {
+    "file": "assets/world/shore-colony.glb",
+    "provider": "Kenney Nature Kit 2.1",
+    "license": "CC0-1.0",
+    "url": "https://kenney.nl/assets/nature-kit",
+    "sha256": "2dc979485f164d7dce34329096271f44e0c9ea329c104251d94bcfbc8f8fe05e",
+    "use": "Living shoreline / root recovery feedback; source geometry retained"
+  },
+  {
+    "file": "assets/world/root-frond.glb",
+    "provider": "Kenney Nature Kit 2.1",
+    "license": "CC0-1.0",
+    "url": "https://kenney.nl/assets/nature-kit",
+    "sha256": "b192523736f32754788de4dc7a5dcf30a58322b260ec8969120c91432a10b633",
+    "use": "Living shoreline / root recovery feedback; source geometry retained"
   }
 ]

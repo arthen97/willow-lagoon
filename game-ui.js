@@ -1,6 +1,6 @@
 import {createPrologue} from './prologue.js?v=20261016-mj81';
 import * as THREE from 'three';
-import {createExpedition} from './expedition.js?v=20261016-teal';
+import {createExpedition} from './expedition.js?v=20261017-arc';
 
 const $=selector=>document.querySelector(selector);
 const MAP={x:-60,z:-24,w:120,h:104};
@@ -52,7 +52,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     document.body.classList.remove('menu-open');
   }
   function resume(lock=true){
-    if(!started)return;closeMenus();state.paused=false;controls.enabled=true;walker.clearInput();
+    if(!started||document.querySelector('dialog[data-block-resume="true"][open]'))return;closeMenus();state.paused=false;controls.enabled=true;walker.clearInput();
     $('#pause').setAttribute('aria-expanded','false');if(lock)lockCamera();
   }
   function pause(dialog=pauseMenu){
@@ -135,7 +135,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     ctx.drawImage(terrain,MAP.x,MAP.z,MAP.w,MAP.h);
     ctx.lineWidth=.7/scale;ctx.strokeStyle='#d2dfbb15';ctx.beginPath();
     for(let x=-60;x<=60;x+=10){ctx.moveTo(x,-24);ctx.lineTo(x,80);}for(let z=-20;z<=80;z+=10){ctx.moveTo(-60,z);ctx.lineTo(60,z);}ctx.stroke();
-    for(const node of expedition.nodes){if(!expedition.progress.discovered.has(node.id)&&node.id!=='camp')continue;ctx.save();ctx.translate(node.x,node.z);ctx.rotate(Math.PI/4);ctx.fillStyle=expedition.progress.activated.has(node.id)?'#97d2b7':node.type==='plant'?'#a9c0a2':'#d9ba7d';ctx.fillRect(-4/scale,-4/scale,8/scale,8/scale);ctx.restore();if(expanded&&node.type!=='plant'){const label={trump:'01 记忆碑',ronaldo:'02 永不退役',lebron:'03 净水台',musk:'04 冥王星',relay:'旧终端',camp:'⌂ 零号营地','cave-siphon':'蓝脉洞窟','vent-a':'潮汐气孔','lung-a':'共生肺囊','lung-b':'骨林肺囊','wreck-tank':'残骸氧气罐'}[node.id]||node.name;ctx.font=`${11/scale}px sans-serif`;ctx.fillText(label,node.x+7/scale,node.z+13/scale);}}
+    for(const node of expedition.nodes){if(!expedition.progress.discovered.has(node.id)&&node.id!=='camp')continue;ctx.save();ctx.translate(node.x,node.z);ctx.rotate(Math.PI/4);ctx.fillStyle=expedition.progress.activated.has(node.id)?'#97d2b7':node.type==='plant'?'#a9c0a2':'#d9ba7d';ctx.fillRect(-4/scale,-4/scale,8/scale,8/scale);ctx.restore();if(expanded&&node.type!=='plant'){const label={trump:'01 记忆碑',ronaldo:'02 永不退役',lebron:'03 净水台',musk:'04 冥王星',relay:'旧终端',camp:'⌂ 零号营地','cave-siphon':'蓝脉洞窟','vent-a':'潮汐气孔','lung-a':'共生肺囊','lung-b':'骨林肺囊','wreck-tank':'残骸氧气罐','root-wound':'旧泵根床','lake-listen':'湖岸观测'}[node.id]||node.name;ctx.font=`${11/scale}px sans-serif`;ctx.fillText(label,node.x+7/scale,node.z+13/scale);}}
     const goal=expedition.target();
     if(goal){ctx.save();ctx.strokeStyle='#83f5df';ctx.fillStyle='#83f5df';ctx.lineWidth=2/scale;ctx.beginPath();ctx.arc(goal.x,goal.z,9/scale,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(goal.x,goal.z,3/scale,0,Math.PI*2);ctx.fill();if(expanded){ctx.font=`${12/scale}px sans-serif`;ctx.fillText('当前目标 · '+goal.name,goal.x+13/scale,goal.z-9/scale);}ctx.restore();}
     ctx.save();ctx.translate(p.x,p.z);ctx.rotate(-walker.actor.rotation.y);ctx.fillStyle='#e9efdb12';ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,20/scale,-Math.PI*.7,-Math.PI*.3);ctx.closePath();ctx.fill();

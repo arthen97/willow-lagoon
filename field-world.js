@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {createLivingShore} from './living-shore.js?v=20261017-arc';
 import {asset,instance,materials} from './asset-library.js';
 export const CAMP={id:'camp',type:'camp',name:'零号营地 · 氧气回收站',x:-2.5,z:5.2};
 export const CAVE={x:-18,z:43,radius:4.6,length:17};
@@ -30,7 +31,7 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
  for(const x of[-.25,.25]){const t=instance(sources['oxygen-tank'],.61);t.position.set(x,.78,.33);carry.add(t);}walker.animation.mount(carry,'Spine');
  const pump=instance(sources.collector,.38);pump.position.set(.38,.68,-.15);walker.actor.add(pump);pump.visible=false;walker.animation.mount(pump,'RightHand');
  const nodes=FIELD_NODES.map(n=>({...n}));world.nodes.push({...CAMP,object:station},...nodes);const organs=[];
- for(const n of nodes){let o;if(n.type==='lung'){o=put('lung-plant',n.x,n.z,2.25,n.x*.13);organs.push({mesh:o,base:o.scale.clone(),seed:n.x});}
+ for(const n of nodes){let o;if(n.type==='lung'){o=put('lung-plant',n.x,n.z,2.25,n.x*.13);organs.push({id:n.id,mesh:o,base:o.scale.clone(),seed:n.x});}
   else if(n.type==='salvage')o=put('oxygen-tank',n.x,n.z,.95,.45);
   else if(n.type==='siphon'){o=put('collector',n.x,n.z,.7);o.visible=false;}
   else{o=instance(rocks,.65);o.position.set(n.x,groundHeight(n.x,n.z)-.12,n.z);group.add(o);const l=new THREE.PointLight(0x8bbfa7,2,2);l.position.set(n.x,groundHeight(n.x,n.z)+.2,n.z);group.add(l);}
@@ -60,5 +61,6 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
  const colonies=[[-12,10,2.2],[-22,18,3.2],[8,21,2.6],[18,24,3.5],[-26,29,4],[23,42,4.8],[-7,44,2.8],[7,48,5],[20,15,2.4],[-29,38,3.4]];
  for(const[x,z,h]of colonies){put('fan-plant',x,z,h,x*.6);walker.obstacles.push({x,z,r:.35,h});}
  const trail=label('营地 ←    洞窟 ↑','先观察，再取用。别把肺交给广告。',2.4);trail.position.set(-8,groundHeight(-8,24)+1.2,24);
- return {group,camp:CAMP,cave:CAVE,isSheltered(p){return Math.abs(p.x-CAVE.x)<4&&Math.abs(p.z-CAVE.z)<8.3||Math.hypot(p.x-CAMP.x,p.z-CAMP.z)<3.6;},update(time,game){organs.forEach(o=>o.mesh.scale.copy(o.base).multiplyScalar(1+Math.sin(time*1.3+o.seed)*.025));pump.visible=!!game.harvesting;for(let i=0;i<rack.length;i++)rack[i].visible=game.delivered>0&&i<Math.ceil(game.reserve/40);if(game.insertedAt!==undefined){const t=Math.min(1,(time-game.insertedAt)/1.2);rack[0].position.y=groundHeight(CAMP.x,CAMP.z)+.3*(1-t);}for(const n of nodes)if(n.type==='siphon')n.object.visible=!!game.deployments[n.id];else if(n.type==='salvage')n.object.visible=!game.salvaged?.has?.(n.id);}};
+ const shore=await createLivingShore({scene,loader,world,walker,groundHeight});let lastTime=0;
+ return {group,camp:CAMP,cave:CAVE,isSheltered(p){return Math.abs(p.x-CAVE.x)<4&&Math.abs(p.z-CAVE.z)<8.3||Math.hypot(p.x-CAMP.x,p.z-CAMP.z)<3.6;},update(time,game,progress){const dt=Math.min(.12,Math.max(0,time-lastTime));lastTime=time;shore.update(time,game,dt);organs.forEach(o=>{const resting=(progress?.cooldowns.get(o.id)||0)>time;const breathe=game.fed?.[o.id] ? .08 : .025;o.mesh.scale.copy(o.base).multiplyScalar((resting ? .76 : 1)+Math.sin(time*1.3+o.seed)*breathe);});pump.visible=!!game.harvesting;for(let i=0;i<rack.length;i++)rack[i].visible=game.delivered>0&&i<Math.ceil(game.reserve/40);if(game.insertedAt!==undefined){const t=Math.min(1,(time-game.insertedAt)/1.2);rack[0].position.y=groundHeight(CAMP.x,CAMP.z)+.3*(1-t);}for(const n of nodes)if(n.type==='siphon')n.object.visible=!!game.deployments[n.id];else if(n.type==='salvage')n.object.visible=!game.salvaged?.has?.(n.id);}};
 }

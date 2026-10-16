@@ -1,0 +1,98 @@
+{
+  "provider": "Merouter",
+  "model": "eleven_v4",
+  "language": "en",
+  "voice": "project narrator",
+  "clips": [
+    {
+      "file": "arc01_landing.mp3",
+      "bytes": 97009,
+      "status": "completed"
+    },
+    {
+      "file": "arc02_closed.mp3",
+      "bytes": 84470,
+      "status": "completed"
+    },
+    {
+      "file": "arc03_first_breath.mp3",
+      "bytes": 75275,
+      "status": "completed"
+    },
+    {
+      "file": "arc04_first_return.mp3",
+      "bytes": 65244,
+      "status": "completed"
+    },
+    {
+      "file": "arc05_pump.mp3",
+      "bytes": 85724,
+      "status": "completed"
+    },
+    {
+      "file": "arc06_cave.mp3",
+      "bytes": 71514,
+      "status": "completed"
+    },
+    {
+      "file": "arc07_statue.mp3",
+      "bytes": 84470,
+      "status": "completed"
+    },
+    {
+      "file": "arc08_pump_return.mp3",
+      "bytes": 97009,
+      "status": "completed"
+    },
+    {
+      "file": "arc09_feed.mp3",
+      "bytes": 82798,
+      "status": "completed"
+    },
+    {
+      "file": "arc10_exhale.mp3",
+      "bytes": 62318,
+      "status": "completed"
+    },
+    {
+      "file": "arc11_release.mp3",
+      "bytes": 49780,
+      "status": "completed"
+    },
+    {
+      "file": "arc12_overdraw.mp3",
+      "bytes": 70260,
+      "status": "completed"
+    },
+    {
+      "file": "arc13_lakeshore.mp3",
+      "bytes": 54795,
+      "status": "completed"
+    },
+    {
+      "file": "arc14_final_valve.mp3",
+      "bytes": 71514,
+      "status": "completed"
+    },
+    {
+      "file": "arc15_contact.mp3",
+      "bytes": 69006,
+      "status": "completed"
+    },
+    {
+      "file": "arc16_dawn.mp3",
+      "bytes": 67752,
+      "status": "completed"
+    },
+    {
+      "file": "arc17_repair.mp3",
+      "bytes": 89486,
+      "status": "completed"
+    },
+    {
+      "file": "arc18_restored.mp3",
+      "bytes": 91994,
+      "status": "completed"
+    }
+  ]
+}

@@ -103,3 +103,10 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - `assets/stylized/ground-painted.jpg`: built-in image generation edit of the existing CC0 ground albedo, simplified into sage moss, gray-brown earth and restrained ink shapes. Local PNG master retained.
 - Prompt: Transform the ground albedo into a seamless, top-down hand-painted animation texture with the visual feel of Scavengers Reign; broad muted sage lichen, cool gray-brown earth, small shale chips, selective thin ink contours, no directional lighting, perspective, text or turquoise ground tint.
 - Other assets retain their original credited maps, with real-time cel lighting and colour-detail simplification in `toon-rendering.js`. Contours read the existing animated scene depth; no additional collision or character geometry is created.
+
+## 2026-10-17 — Living shoreline and narrative arc
+
+- `assets/world/shore-colony.glb`, `root-frond.glb`: Kenney, **Nature Kit 2.1**, CC0. Source: https://kenney.nl/assets/nature-kit . Extracted from the previously downloaded source archive; source mesh and authored material colors retained. Runtime material tint/emission and plant animation adapted to the game. License included in `assets/world/kenney-nature-license.txt`; checksums in the world manifest.
+- `assets/story/voice-arc/*.mp3`: 18 original English protagonist lines generated through Merouter **eleven_v4**, using the project's existing narrator voice. Chinese captions and English scripts are in `planet-story.js`. No celebrity voice impersonation.
+- Root-bed pump, lung organisms, tanks and collector reuse the project's existing Meshy assets; the new shoreline stages use the imported CC0 models above.
+- Narrative reading reference: 尹清露, 界面新闻, 2022-06-07, https://www.jiemian.com/article/7558049.html . The game uses original characters, dialogue and events; no article prose, poetry, screenshots or adaptation footage is reproduced.

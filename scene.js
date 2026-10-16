@@ -1,6 +1,6 @@
 import {stylizeMaterials,addInkPass} from './toon-rendering.js?v=20261017-lit-ink';
 import * as THREE from 'three';
-import {createFieldWorld} from './field-world.js?v=20261017-lit-ink';
+import {createFieldWorld} from './field-world.js?v=20261017-arc';
 import {createCinematic} from './cinematic.js?v=20261017-lit-ink';
 import {expandedHeight,expandGround} from './terrain.js?v=20261015-1';
 import {createFishSchools} from './fish.js?v=20261016-camp';
@@ -8,7 +8,7 @@ import {createAmbientSound} from './audio.js?v=20261016-arthen';
 import {enrichEnvironment} from './environment.js?v=20261017-lit-ink';
 import {createWalker} from './walker.js?v=20261016-camp';
 import {createStoryWorld} from './story-world.js?v=20261017-lit-ink';
-import {createGameUI} from './game-ui.js?v=20261016-mj81';
+import {createGameUI} from './game-ui.js?v=20261017-arc';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js';
