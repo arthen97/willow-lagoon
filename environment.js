@@ -5,7 +5,7 @@ export async function enrichEnvironment(ctx) {
   const ground=model.getObjectByName('GROUND');
   const textures=new THREE.TextureLoader();
   const [color,normal,rough,boatRough]=await Promise.all([
-    textures.loadAsync('./assets/ground-color.jpg'),
+    textures.loadAsync('./assets/stylized/ground-painted.jpg'),
     textures.loadAsync('./assets/ground-normal.jpg'),
     textures.loadAsync('./assets/ground-rough.jpg'),
     textures.loadAsync('./assets/boat-rough.jpg')
@@ -20,13 +20,13 @@ export async function enrichEnvironment(ctx) {
   color.colorSpace=THREE.SRGBColorSpace;
   for(const texture of [color,normal,rough]) {
     const source=texture===normal?(old.normalMap||old.map):old.map;
-    // Terrain UVs span 44 × 32 metres: each 4K tile now covers two metres.
-    texture.repeat.set(22,16);
+    // Terrain UVs span 44 × 32 metres: each painted tile covers three metres.
+    texture.repeat.set(44/3,32/3);
     texture.offset.copy(source.offset);texture.flipY=source.flipY;
   }
   boatRough.flipY=old.map.flipY;
   const soil=new THREE.MeshPhysicalMaterial({map:color,normalMap:normal,roughnessMap:rough,
-    color:new THREE.Color(.91,.88,.81),roughness:.96,metalness:0,normalScale:new THREE.Vector2(.42,.42),
+    color:new THREE.Color(.91,.88,.81),roughness:.96,metalness:0,normalScale:new THREE.Vector2(0,0),
     envMapIntensity:.4,clearcoat:.035,clearcoatRoughness:.65});
   soil.onBeforeCompile=s=>{
     s.vertexShader='varying vec3 vSoil;\n'+s.vertexShader;

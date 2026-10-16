@@ -97,3 +97,9 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 
 - Replaced the Chinese promotional lettering with English using the built-in image editing tool, retaining the existing Midjourney-based artwork. Current file: `assets/social/earth-do-you-copy-intro-en.jpg`; the previous generic introduction URL also serves the English version. Prompt and workflow: `docs/social-poster-en.md`.
 - Bird silhouettes reuse the existing project geometry; only grouping and flight animation changed. Landscape meshes remain the existing CC0 scans and original island.
+
+## 2026-10-17 · Painted ground and toon rendering
+
+- `assets/stylized/ground-painted.jpg`: built-in image generation edit of the existing CC0 ground albedo, simplified into sage moss, gray-brown earth and restrained ink shapes. Local PNG master retained.
+- Prompt: Transform the ground albedo into a seamless, top-down hand-painted animation texture with the visual feel of Scavengers Reign; broad muted sage lichen, cool gray-brown earth, small shale chips, selective thin ink contours, no directional lighting, perspective, text or turquoise ground tint.
+- Other assets retain their original credited maps, with real-time cel lighting and colour-detail simplification in `toon-rendering.js`. Contours read the existing animated scene depth; no additional collision or character geometry is created.

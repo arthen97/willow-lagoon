@@ -89,3 +89,7 @@ Moved the added distant cliff meshes to 1.05–1.5 km away; bounded the footprin
 ### 2026-10-17 · Continuous shoreline and subdued overcast light
 
 Removed the added offshore scan slabs and the detached outer ring of cliffs. The original complete island asset provides the lake horizon. Two small cave outcrops are embedded 38% of their actual height into the terrain. Reduced sun intensity 3.2 → 1.8, default exposure 1.00 → 0.85, ambient environment 0.45 → 0.30 and bloom 0.28 → 0.22; darkened the sky and haze consistently. Bird flocks and the English poster are retained.
+
+### 2026-10-17 · Painted cel shading and ink contours
+
+Hand-painted ground albedo replaces the photographic ground colour map. Standard and physical materials retain their existing texture identity but use softened colour detail, suppressed surface micro-normal/specular noise and stepped diffuse lighting. A depth-aware post-process adds restrained silhouette strokes, with lighter foliage lines and distance fade; strength is adjustable in settings. Water colours use a gentle painted tonal treatment. All movement, terrain heights, collisions, oxygen rules, bone animation and simulation modules are unchanged.
