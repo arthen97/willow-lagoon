@@ -1,4 +1,4 @@
-import {createPrologue} from './prologue.js';
+import {createPrologue} from './prologue.js?v=20261016-arthen';
 import * as THREE from 'three';
 import {createExpedition} from './expedition.js?v=20261016-blue';
 

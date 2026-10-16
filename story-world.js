@@ -23,7 +23,7 @@ export async function createStoryWorld({scene,loader,groundHeight,walker}){
   const height=node.species==='moss'?.38:node.species==='dew'?.9:.72;
   const root=place(source,node.x,node.z,height,node.x*.2,null,false);
   const tint={silver:0xb4c8b2,dew:0xaac0a0,moss:0x649e9c,red:0xb55d4b};
-  materials(root,m=>{m.emissive.setHex(tint[node.species]);m.emissiveIntensity=.08;if(!node.glow)node.glow=m;});node.object=root;root.userData.restScaleY=root.scale.y;
+  node.glowMaterials=[];materials(root,m=>{m.emissive.setHex(node.species==='red'?tint.red:0x77ddd0);m.emissiveMap=m.emissiveMap||m.map;m.emissiveIntensity=node.species==='red'?.12:1.7;node.glowMaterials.push(m);if(!node.glow)node.glow=m;});node.object=root;root.userData.restScaleY=root.scale.y;
  }
  for(const node of nodes){
   // Find a walkable clearing close to the authored location; never hide pickups inside collision geometry.
@@ -60,5 +60,5 @@ export async function createStoryWorld({scene,loader,groundHeight,walker}){
  const dt=Math.min(.05,Math.max(0,time-worldTime));worldTime=time;
  for(const n of nodes)if(n.restRotation){const age=time-n.hitAt;n.object.rotation.copy(n.restRotation);if(age<1){const wobble=Math.sin(age*34)*Math.exp(-age*6)*.12;n.object.rotation.z+=wobble;n.object.rotation.x+=wobble*.6;}}
  for(let i=chips.length-1;i>=0;i--){const bit=chips[i],age=time-bit.userData.born;bit.userData.velocity.y-=dt*6;bit.position.addScaledVector(bit.userData.velocity,dt);bit.rotation.x+=dt*4;bit.rotation.z+=dt*3;bit.scale.multiplyScalar(Math.exp(-dt*1.6));if(age>1.3){group.remove(bit);bit.traverse(o=>{if(o.isMesh)for(const m of(Array.isArray(o.material)?o.material:[o.material]))m.dispose();});chips.splice(i,1);}}
-for(const n of nodes){if(n.glow){const depleted=(progress.cooldowns.get(n.id)||0)>time;n.glow.emissiveIntensity=depleted?.025:time<this.scanUntil?1.4:n.type==='relay'&&progress.complete?1:.18+Math.sin(time*1.5+n.x)*.07;}}}};
+for(const n of nodes){if(n.glow){const depleted=(progress.cooldowns.get(n.id)||0)>time;const strength=depleted?.05:n.species==='red'?.15:n.type==='plant'?(time<this.scanUntil?2.4:1.7+Math.sin(time*1.5+n.x)*.2):n.type==='relay'&&progress.complete?1.8:.3;for(const m of n.glowMaterials||[n.glow])m.emissiveIntensity=strength;}}}};
 }

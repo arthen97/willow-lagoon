@@ -80,3 +80,5 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - 剧情序章：Merouter / Seedance 2.5（服务返回模型 `dreamina-seedance-2-5-260628`），24 秒 CG。
 - 序章英语旁白：Merouter / Eleven v4，沿用主角原创演员音色。
 - 雕像打击碎屑复用既有 CC0 岩石资产；原有 Meshy 石膏像和幽默配音保留。
+
+- 英文出品片头：React Bits / David Haz 的 [Stroke Text](https://reactbits.dev/text-animations/stroke-text) 与 [Laser Flow](https://reactbits.dev/animations/laser-flow)，采用同目录 React Bits 许可证。Laser Flow 在片头结束时释放 WebGL 上下文。
