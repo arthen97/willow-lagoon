@@ -6,7 +6,7 @@ export const FIELD_NODES=[
  {id:'wreck-tank',type:'salvage',x:6.1,z:6.8,name:'坠毁货舱 · 应急氧气罐'},
  {id:'lung-a',type:'lung',x:-16,z:23,name:'共生肺囊 · 露液换气'},
  {id:'vent-a',type:'vent',x:10,z:12,name:'潮汐气孔 · 压力取气'},
- {id:'cave-siphon',type:'siphon',x:-18,z:46,name:'洞内蓝脉菌床 · 布置抽气器'},
+ {id:'cave-siphon',type:'siphon',x:-18,z:46,name:'蓝脉菌床 · 蓝息质集氧床'},
  {id:'lung-b',type:'lung',x:15,z:39,name:'骨林肺囊 · 露液换气'}
 ];
 export async function createFieldWorld({scene,loader,walker,world,groundHeight}){
@@ -19,7 +19,7 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
  const station=put('camp-station',CAMP.x,CAMP.z+1.8,2.8,Math.PI);station.name='MESHY_CAMP_RECHARGE_STATION';
  const rack=[];for(let i=0;i<3;i++)rack.push(put('oxygen-tank',CAMP.x-2.0+i*.45,CAMP.z+1.3,.95,Math.PI));
  put('collector',CAMP.x+2.0,CAMP.z+1,.6,Math.PI);
- const sign=label('零号营地','回收氧气  /  补给  /  地球通信');sign.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.9,CAMP.z+1.5);
+ const sign=label('零号营地','保持 E 插罐  /  H 补给  /  R 通信');sign.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.9,CAMP.z+1.5);
  const campLight=new THREE.PointLight(0xffc28b,12,9,2);campLight.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.4,CAMP.z);group.add(campLight);
  walker.obstacles.push({x:CAMP.x,z:CAMP.z+2,r:1.6,h:2.8},{x:CAMP.x-1.6,z:CAMP.z+1.3,r:.65,h:.95});
  // Rigid imported equipment follows the existing attachment bones.
@@ -48,5 +48,5 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
  const colonies=[[-12,10,2.2],[-22,18,3.2],[8,21,2.6],[18,24,3.5],[-26,29,4],[23,42,4.8],[-7,44,2.8],[7,48,5],[20,15,2.4],[-29,38,3.4]];
  for(const[x,z,h]of colonies){put('fan-plant',x,z,h,x*.6);walker.obstacles.push({x,z,r:.35,h});}
  const trail=label('营地 ←    洞窟 ↑','先观察，再取用。别把肺交给广告。',2.4);trail.position.set(-8,groundHeight(-8,24)+1.2,24);
- return {group,camp:CAMP,cave:CAVE,isSheltered(p){return Math.abs(p.x-CAVE.x)<4&&Math.abs(p.z-CAVE.z)<8.3||Math.hypot(p.x-CAMP.x,p.z-CAMP.z)<3.6;},update(time,game){organs.forEach(o=>o.mesh.scale.copy(o.base).multiplyScalar(1+Math.sin(time*1.3+o.seed)*.025));pump.visible=!!game.harvesting;for(const n of nodes)if(n.type==='siphon')n.object.visible=!!game.deployments[n.id];else if(n.type==='salvage')n.object.visible=!game.salvaged?.has?.(n.id);}};
+ return {group,camp:CAMP,cave:CAVE,isSheltered(p){return Math.abs(p.x-CAVE.x)<4&&Math.abs(p.z-CAVE.z)<8.3||Math.hypot(p.x-CAMP.x,p.z-CAMP.z)<3.6;},update(time,game){organs.forEach(o=>o.mesh.scale.copy(o.base).multiplyScalar(1+Math.sin(time*1.3+o.seed)*.025));pump.visible=!!game.harvesting;for(let i=0;i<rack.length;i++)rack[i].visible=game.delivered>0&&i<Math.ceil(game.reserve/40);if(game.insertedAt!==undefined){const t=Math.min(1,(time-game.insertedAt)/1.2);rack[0].position.y=groundHeight(CAMP.x,CAMP.z)+.3*(1-t);}for(const n of nodes)if(n.type==='siphon')n.object.visible=!!game.deployments[n.id];else if(n.type==='salvage')n.object.visible=!game.salvaged?.has?.(n.id);}};
 }

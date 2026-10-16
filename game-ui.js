@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {createExpedition} from './expedition.js?v=20261016-camp';
+import {createExpedition} from './expedition.js?v=20261016-blue';
 
 const $=selector=>document.querySelector(selector);
 const MAP={x:-60,z:-24,w:120,h:104};
@@ -166,5 +166,5 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     $('#waypoint').style.display=visible?'flex':'none';
     if(visible)$('#waypoint').style.transform=`translate(${(projected.x*.5+.5)*innerWidth}px,${(-projected.y*.5+.5)*innerHeight}px) translate(-50%,-100%)`;
   }
-  return {update,start,pause,resume,interact,expedition,get started(){return started;},ready(){ready=true;$('#start-game').disabled=false;$('#start-label').textContent='开始探索';$('#loading-text').textContent='湖岸已就绪';}};
+  return {update,start,pause,resume,interact,expedition,get started(){return started;},ready(){ready=true;$('#start-game').disabled=false;$('#start-label').textContent='开始远征';$('#loading-text').textContent='生命维持在线 · 可以出发';}};
 }

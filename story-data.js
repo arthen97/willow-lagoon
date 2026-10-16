@@ -3,7 +3,7 @@ export const STORY_VERSION=1;
 export const SAMPLE_NAMES={silver:'银叶叶绿体',dew:'露囊催化酶',moss:'蓝脉共生菌'};
 export const VOICE_LINES={
  campIntro:"SpaceX，把我和氧气分开投递，真有你们的。先把收集管接到呼吸花，气体装进背罐。带回营地才能补给、接通地球。别忘了，我自己也得喘气。",
- campHint:"这台广告机没电了。真正的天线在营地。先带回四十升氧气，再问地球今天又发生了什么。",
+ campHint:"这台广告机没电了。真正的天线在营地。先带回一罐氧气，再问地球今天又发生了什么。",
  flower:"管线接好了，气体进背罐。野花免费，SpaceX 收我行李费。这家公司到底运输了什么？",
  dewCollect:"露囊完整。先别喝，给那只长得像肺的家伙。它吃营养液，我拿氧气。这比会员积分好懂多了。",
  feedHint:"这东西在等饭。去透明露囊灌木取营养液，再接收集管。别直接戳它，和生物做生意要讲礼貌。",
@@ -36,7 +36,7 @@ export const VOICE_LINES={
  scan:'扫描发出。绿的是产氧组织，红的是想让我停止呼吸的东西。至少广告很诚实。'
 };
 export const STORY_NODES=[
- {id:'silver-a',type:'plant',species:'silver',x:-4.8,z:7,name:'银露草丛',question:'银白色叶背挂着透明露珠。你要怎么做？',hint:'透明露珠 + 银白叶脉 = 可采集氧源。',choices:[{text:'采集银叶与透明露珠',good:true},{text:'直接吸入花粉',good:false},{text:'给 SpaceX 留一星差评',joke:'差评已保存。网络预计在 40 年后恢复。先采草。'}]},
+ {id:'silver-a',type:'plant',species:'silver',x:-4.8,z:7,name:'银白蓝息质 · 首次采集点',question:'银白色叶背挂着透明露珠。你要怎么做？',hint:'透明露珠 + 银白叶脉 = 可采集氧源。',choices:[{text:'采集银叶与透明露珠',good:true},{text:'直接吸入花粉',good:false},{text:'给 SpaceX 留一星差评',joke:'差评已保存。网络预计在 40 年后恢复。先采草。'}]},
  {id:'red-a',type:'plant',species:'red',x:1,z:9,name:'赤冠灌木',question:'红色荚壳散出刺鼻气味，旁边贴着「旗舰氧气 Pro」。',hint:'红色荚壳不产氧。广告不是生物检测。',choices:[{text:'相信旗舰宣传，打开荚壳',good:false},{text:'绕开它，找银白叶背',safe:true}]},
  {id:'trump',type:'archive',portrait:'trump',x:-9,z:13,name:'「空气再次伟大」纪念碑',title:'川普的遗言（展馆虚构版）',body:'「让空气再次伟大。」\n落款：地球名人馆编剧部。真正的植物记录刻在背面：银白叶脉、透明露珠，才是可提取的产氧组织。',question:'哪条信息能帮你活下来？',choices:[{text:'辨认银白叶背和透明露珠',good:true},{text:'对着石膏像喊口号',good:false},{text:'把造型夸张的头发当空气过滤器',joke:'头发是石膏的，滤不了空气，但非常能吸引注意。'}],clue:'在西侧和南侧草丛寻找银露草。红色荚壳会堵塞过滤器。'},
  {id:'silver-b',type:'plant',species:'silver',x:-12,z:18,name:'石墙后的银露草',question:'墙根的银叶上凝着水珠。采集一份，留一份再生。',choices:[{text:'采集银叶样本',good:true},{text:'连根拔起',good:false}]},
