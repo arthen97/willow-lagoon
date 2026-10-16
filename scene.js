@@ -8,7 +8,7 @@ import {createAmbientSound} from './audio.js?v=20261016-arthen';
 import {enrichEnvironment} from './environment.js?v=20261017-lit-ink';
 import {createWalker} from './walker.js?v=20261016-camp';
 import {createStoryWorld} from './story-world.js?v=20261017-lit-ink';
-import {createGameUI} from './game-ui.js?v=20261017-arc';
+import {createGameUI} from './game-ui.js?v=20261017-fieldkit';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js';

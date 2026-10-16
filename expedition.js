@@ -3,7 +3,7 @@ import {VOICE_LINES} from './story-data.js';
 import {createProgress,serializeProgress} from './survival.js';
 import {CAMP} from './field-world.js';
 import {ARC_VOICE,CHAPTERS,BRIEFS,ARCHIVE_CLUES,WINDOW_SECONDS,UPLOAD_SECONDS,UPLOAD_OXYGEN} from './planet-story.js?v=20261017-arc';
-import {createPlanetUI} from './planet-ui.js?v=20261017-arc';
+import {createPlanetUI} from './planet-ui.js?v=20261017-fieldkit';
 const $=s=>document.querySelector(s),STORE='willow-planet-arc-v1',CAPACITY=120;
 const read=key=>{try{return JSON.parse(localStorage.getItem(key)||'null');}catch{return null;}};
 export function createExpedition({walker,state,world,notify,openDialog,resume,ambientSound}){

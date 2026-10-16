@@ -1,6 +1,6 @@
 import {createPrologue} from './prologue.js?v=20261016-mj81';
 import * as THREE from 'three';
-import {createExpedition} from './expedition.js?v=20261017-arc';
+import {createExpedition} from './expedition.js?v=20261017-fieldkit';
 
 const $=selector=>document.querySelector(selector);
 const MAP={x:-60,z:-24,w:120,h:104};
@@ -91,6 +91,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     if(e.code==='KeyM'){
       e.preventDefault();e.stopImmediatePropagation();if(mapDialog.open)resume();else if(!state.paused)pause(mapDialog);return;
     }
+    if(e.code==='KeyV'&&!e.repeat&&!state.paused){const notes=$('.field-telemetry');if(notes){e.preventDefault();notes.open=!notes.open;}return;}
     if(e.code==='KeyE'&&!e.repeat){e.preventDefault();interact();}
   },true);
   document.addEventListener('pointerlockchange',()=>{

@@ -110,3 +110,7 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - `assets/story/voice-arc/*.mp3`: 18 original English protagonist lines generated through Merouter **eleven_v4**, using the project's existing narrator voice. Chinese captions and English scripts are in `planet-story.js`. No celebrity voice impersonation.
 - Root-bed pump, lung organisms, tanks and collector reuse the project's existing Meshy assets; the new shoreline stages use the imported CC0 models above.
 - Narrative reading reference: 尹清露, 界面新闻, 2022-06-07, https://www.jiemian.com/article/7558049.html . The game uses original characters, dialogue and events; no article prose, poetry, screenshots or adaptation footage is reproduced.
+
+## Field HUD portrait · 2026-10-17
+
+`assets/ui/pilot-portrait.jpg`: AI-generated with the built-in OpenAI image generation tool, using the project's Meshy astronaut inspection images as suit references. Original helmet portrait; no external character likeness. Downscaled and JPEG encoded for the HUD.

@@ -1,0 +1,81 @@
+/* Field kit / 2026-10-17. Layout only: simulation values and input bindings stay in their owners. */
+#game-hud{--hud-ink:#eeeede;--hud-muted:#b0bdb3;--hud-line:#c7d6c02e;--hud-green:#c4d5ad;--hud-amber:#e9ad78;--hud-gutter:clamp(20px,2.5vw,42px);color:var(--hud-ink);font-family:'Helvetica Neue','PingFang SC',sans-serif;font-variant-numeric:tabular-nums}
+#game-hud [hidden]{display:none!important}
+#game-hud button:focus-visible,#game-hud summary:focus-visible{outline:2px solid var(--hud-amber);outline-offset:4px}
+#game-hud button:disabled{cursor:default}
+.edge-shade{background:linear-gradient(180deg,#0913116b,transparent 27%,transparent 65%,#09131180)}
+#mission{left:var(--hud-gutter);top:32px;width:285px;max-width:285px;padding:0 0 0 15px;border:0;border-left:2px solid var(--hud-green);border-radius:0;background:linear-gradient(90deg,#101c18b0,transparent);text-shadow:0 2px 5px #0009}
+.mission-overline{font-size:10px;letter-spacing:.14em;color:var(--hud-muted)}
+.mission-title{gap:9px;margin-top:12px}.objective-diamond{width:6px;height:6px;border-color:var(--hud-green)}
+#mission-title{font-size:17px;line-height:1.5;letter-spacing:.015em;font-weight:550}
+#mission-detail{font-size:12px;line-height:1.75;letter-spacing:0;max-width:none;margin:8px 0 0;color:#d6ded1}
+.mission-steps{gap:9px;margin:14px 0 0;padding:0;font-size:10px}
+.mission-steps li{flex:1;padding:7px 0 0;border:0;border-top:2px solid #c6d6b82a;background:none;color:#8f9d94;white-space:nowrap}
+.mission-steps li[data-active=true]{color:var(--hud-ink);border-color:var(--hud-green);background:none}
+.mission-tools{margin-top:13px;gap:15px;padding-top:0;color:var(--hud-muted)}
+.mission-tools>span,.mission-tools button{font-size:11px}.mission-tools kbd{font-size:10px;border:1px solid var(--hud-line);padding:2px 4px}
+.compass{top:25px;width:clamp(200px,25vw,330px);height:60px}#compass-heading{font-size:10px;color:var(--hud-muted)}
+#pause{top:27px;right:var(--hud-gutter);left:auto;bottom:auto;transform:none;min-width:32px;justify-content:center}#pause kbd{display:none}
+#navigation-cue{top:89px;padding:6px 12px;gap:9px;border:0;border-radius:0;background:linear-gradient(90deg,transparent,#0d1a16b8 20%,#0d1a16b8 80%,transparent);box-shadow:none;font-size:11px;color:var(--hud-ink);max-width:32vw;white-space:normal;text-align:center}
+#navigation-turn{font-size:21px;color:var(--hud-green)}#navigation-distance{font-size:12px;color:var(--hud-green);white-space:nowrap}
+#waypoint,#waypoint.offscreen{border:0;background:none;box-shadow:none;padding:4px;min-width:0;max-width:155px;font-size:11px;line-height:1.4;white-space:normal;text-align:center;color:var(--hud-ink);text-shadow:0 1px 3px #000,0 0 9px #000}
+#waypoint strong{font-size:14px;font-weight:500;color:var(--hud-green)}#waypoint-turn{display:none}.waypoint-symbol{border-color:var(--hud-green)}.waypoint-symbol:after{background:var(--hud-green)}
+/* A single equipment dock with unmistakably separate suit air and carried material. */
+#life-support{position:absolute;left:var(--hud-gutter);bottom:28px;width:304px;padding:15px 16px 13px;background:linear-gradient(110deg,#0e1b18f0,#0e1b18d6);border:1px solid var(--hud-line);border-top-color:#c7d6c05e;border-radius:2px;box-shadow:0 8px 28px #0003}
+#survival-hud{position:relative;inset:auto;display:flex;width:100%;gap:15px;align-items:flex-start;text-shadow:none}
+#hud-portrait.hud-portrait{width:79px;height:94px;flex-shrink:0;background:#263029;border:1px solid #c8d2ba42;border-radius:1px;overflow:hidden}
+#hud-portrait img{position:static;display:block;width:100%;height:100%;max-width:100%;object-fit:cover;object-position:center;filter:none}
+#hud-portrait:after{background:linear-gradient(transparent 65%,#08120de6)}
+#hud-portrait>span{z-index:1;bottom:6px;left:7px;color:#e8e9d9;font:8px ui-monospace,monospace;letter-spacing:.11em}
+.vitals{flex:1;min-width:0}.pilot-line{font-size:10px;letter-spacing:.06em;color:var(--hud-muted);justify-content:space-between;gap:5px}.pilot-line b{font-weight:500;color:var(--hud-ink)}
+.suit-link{display:flex;font-size:9px;gap:4px;letter-spacing:0}.suit-link i{background:var(--hud-green);box-shadow:none;width:4px;height:4px}
+.oxygen-readout{display:flex;align-items:flex-end;justify-content:space-between;margin:8px 0 8px;gap:8px}.oxygen-label{font-size:17px;color:var(--hud-green);line-height:1}.oxygen-label small{display:block;font-size:10px;margin-top:5px;letter-spacing:0;color:var(--hud-muted)}
+#oxygen-value{font:500 33px/1 'Helvetica Neue',sans-serif;letter-spacing:-.045em;color:var(--hud-ink)}
+.oxygen-track{height:6px;background:#d7dfcd22;border-radius:0;position:relative;overflow:hidden}.oxygen-track:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(10% - 2px),#101c18 calc(10% - 2px),#101c18 10%);pointer-events:none}
+#oxygen-fill{height:100%;background:var(--hud-green);box-shadow:none}#oxygen-note{display:block;font-size:10px;line-height:1.5;color:var(--hud-muted);margin-top:6px;letter-spacing:0}
+.stamina-heading{display:flex;justify-content:space-between;font-size:9px;color:#8d9b91;margin-top:10px}.stamina-heading span{font-size:7px;letter-spacing:.12em}.stamina-track{width:100%;height:2px;margin-top:4px;background:#d7dfcd20}#stamina-fill{background:#aeb8ab}
+.low-oxygen #life-support{border-left:2px solid var(--hud-amber)}.low-oxygen #oxygen-value,.low-oxygen #oxygen-note{color:var(--hud-amber)}.low-oxygen #oxygen-fill{background:var(--hud-amber)}.low-oxygen #hud-portrait{border-color:var(--hud-amber)}
+#cargo-hud{position:relative;inset:auto;width:100%;font-size:11px;margin-top:16px;padding-top:13px;border-top:1px solid var(--hud-line);color:var(--hud-ink);text-shadow:none}
+.cargo-title{gap:8px;letter-spacing:0}.cargo-title .canister-name{display:grid;grid-template-columns:16px auto;column-gap:7px;align-items:center;font-size:11px}.canister-name svg{grid-row:span 2;width:14px;height:23px;fill:none;stroke:var(--hud-muted);stroke-width:1.1}.cargo-title .canister-name small{display:block;font-size:9px;color:var(--hud-muted);opacity:1;margin-top:3px}.cargo-title strong{font-size:24px;letter-spacing:-.04em;font-weight:500}.cargo-title small{font-size:10px;color:var(--hud-muted);opacity:1}
+.cargo-track{height:3px;margin:9px 0 10px;background:#d7dfcd20}.cargo-track i{background:#89aaa0}.cargo-meta{font-size:10px;color:var(--hud-muted)}.cargo-meta b{color:var(--hud-ink);margin-left:5px}
+#tank-transfer{display:block;width:100%;text-align:left;font-size:10px;padding:10px 0 0;margin-top:6px;border-top:1px solid #c7d6c018;color:var(--hud-muted)}#tank-transfer kbd{font-size:9px;margin-right:6px}#tank-transfer:hover{color:var(--hud-ink)}
+/* Communications, weather and optional field notes share one quiet header. */
+#planet-status{top:32px;right:calc(var(--hud-gutter) + 53px);width:220px;padding:0 13px 0 0;border-right:1px solid var(--hud-line);background:linear-gradient(270deg,#101c18b0,transparent);text-align:right;color:var(--hud-ink)}
+#planet-chapter{font-size:10px;letter-spacing:.08em;color:var(--hud-muted)}#planet-status>div{gap:12px;margin-top:8px}#planet-status>div>small{font-size:10px;color:var(--hud-muted)}#planet-countdown{font:500 29px/1.1 ui-monospace,monospace;letter-spacing:-.06em;color:var(--hud-ink)}
+.field-telemetry{pointer-events:auto;margin-top:13px;font-size:11px}.field-telemetry summary{list-style:none;cursor:pointer;color:var(--hud-muted);padding:6px 0}.field-telemetry summary::-webkit-details-marker{display:none}.field-telemetry summary span{margin-left:8px;color:var(--hud-green)}.field-telemetry[open] summary span{display:inline-block;transform:rotate(45deg)}#planet-status p{font-size:12px;line-height:1.7;margin:8px 0}#return-budget{font-size:10px;color:var(--hud-muted)}
+#planet-status #event-banner{position:static;display:flex;justify-content:flex-end;gap:10px;border-top:1px solid var(--hud-line);padding-top:10px;margin-top:9px;font-size:10px;letter-spacing:0;color:var(--hud-muted)}#event-time{font:13px ui-monospace,monospace;color:var(--hud-green)}#planet-status[data-urgent=true] strong,#event-banner[data-danger=true] #event-time{color:var(--hud-amber)}
+#uplink-track{height:3px}#uplink-track i{background:var(--hud-green)}
+/* Terrain stays visible; the map is a compact instrument, not a second panel. */
+#region-map{inset:auto var(--hud-gutter) 29px auto;width:154px}.radar-frame{width:138px;height:138px;border:1px solid #cbd5bb70;box-shadow:0 0 0 4px #12221bb3,0 0 0 5px #c7d6c02e;background:#13251ee0}.radar-north{font-size:9px;margin-bottom:9px}.radar-location{margin-top:13px;font-size:10px;line-height:1.5;letter-spacing:0;gap:7px}.radar-location kbd{font-size:9px}#map-coordinates{font:9px ui-monospace,monospace;color:var(--hud-muted);letter-spacing:.05em;margin-top:6px}
+#controls-hint{font-size:10px;bottom:29px;gap:15px}#controls-hint kbd{font-size:9px}.mouse-hint{font-size:9px}
+#interact{bottom:192px;padding:10px 15px;border:1px solid var(--hud-line);border-radius:2px;background:#101c18e8;font-size:13px;max-width:min(420px,80vw);letter-spacing:0;box-shadow:0 6px 20px #0002}#interact kbd{background:var(--hud-ink);border:0;color:#17251d;font-size:13px;min-width:32px;text-align:center;padding:6px}
+#camp-actions{bottom:102px;gap:8px;max-width:min(530px,calc(100vw - 660px));width:max-content;justify-content:center}#camp-actions button{font-size:11px;padding:10px 12px;border-color:var(--hud-line);background:#101c18ed;color:var(--hud-ink)}#camp-insert{border-color:#c4d5ad90!important}#camp-budget{font-size:10px;line-height:1.5;color:var(--hud-muted);margin-bottom:3px}
+#field-action{bottom:250px;background:linear-gradient(90deg,transparent,#101c18ee 18%,#101c18ee 82%,transparent);padding:14px 20px}#action-title{font-size:12px;letter-spacing:0}#action-detail{font-size:11px}
+#ecology-alternate{bottom:148px;border-color:var(--hud-line);background:#101c18e8;color:var(--hud-amber);font-size:11px;padding:9px 14px}
+#subtitles{bottom:62px;width:min(560px,42vw);padding:8px 16px}#subtitles>span{font-size:10px}#subtitles p{font-size:13px;line-height:1.6}body:has(#camp-actions:not([hidden])) #subtitles{bottom:240px}body:has(#field-action:not([hidden])) #subtitles{bottom:350px}
+#notification{top:30%;max-width:70vw;width:max-content;font-size:12px;line-height:1.65;letter-spacing:0}
+@media(max-width:1150px){
+ #mission{top:92px;width:250px;max-width:250px}#mission-title{font-size:15px}#planet-status{top:92px;right:var(--hud-gutter);width:210px}.compass{top:18px}#pause{top:20px}
+ #navigation-cue{top:78px;max-width:35vw;font-size:10px}#life-support{width:278px;padding:12px}#hud-portrait.hud-portrait{width:66px;height:84px}#survival-hud{gap:12px}#oxygen-value{font-size:31px}.suit-link{display:none}
+ #camp-actions{max-width:calc(100vw - 500px);bottom:110px}#controls-hint{display:none}#interact{bottom:225px}#subtitles{bottom:36px}
+}
+@media(max-width:760px){
+ #game-hud{--hud-gutter:16px}.compass{top:14px;left:38%;width:195px}#compass-canvas{height:40px}#compass-heading{font-size:9px}#pause{top:17px;right:16px}
+ #mission{top:94px;width:calc(100vw - 32px);max-width:none;padding:0 0 0 11px;background:linear-gradient(90deg,#101c18cc,transparent)}.mission-overline{display:none}#mission-title{font-size:14px}.mission-title{margin-top:0}#mission-detail{font-size:11px;line-height:1.6;margin-top:5px;max-width:440px}.mission-steps{max-width:280px;margin-top:10px}.mission-tools{margin-top:9px;font-size:10px}
+ #planet-status{top:17px;right:60px;width:90px;border:0;padding:0;background:none}#planet-chapter{display:none}#planet-status>div{display:block;margin:0}#planet-status>div>small{display:block;font-size:8px;margin-bottom:2px}#planet-countdown{font-size:22px}.field-telemetry{position:fixed;top:238px;right:16px;width:190px;margin:0;text-align:right}.field-telemetry summary{font-size:10px}.field-telemetry[open]{padding:10px 12px;background:#101c18f5;border:1px solid var(--hud-line)}
+ #planet-status #event-banner{position:fixed;left:16px;right:auto;top:237px;padding-top:7px;margin:0;gap:8px;font-size:9px;border:0}#event-time{font-size:12px}
+ #navigation-cue{top:64px;max-width:90vw;width:max-content;padding:4px 8px;font-size:10px}#navigation-turn{font-size:17px}#navigation-distance{font-size:11px}
+ #life-support{bottom:16px;width:238px;padding:11px}#hud-portrait.hud-portrait{width:57px;height:76px}#survival-hud{gap:11px}#oxygen-value{font-size:28px}.pilot-line{font-size:9px}.oxygen-label{font-size:14px}.oxygen-label small{font-size:9px}#oxygen-note{font-size:9px}.stamina-heading{margin-top:6px;font-size:8px}#cargo-hud{margin-top:10px;padding-top:10px}.cargo-title strong{font-size:20px}.cargo-title .canister-name{font-size:10px}.cargo-title .canister-name small{font-size:8px}.cargo-track{margin:7px 0}#tank-transfer{padding-top:7px;margin-top:7px;font-size:9px}
+ #region-map{top:auto;bottom:18px;right:16px;width:109px}.radar-frame{width:94px;height:94px}.radar-location{font-size:9px;margin-top:8px}.radar-north{font-size:8px;margin-bottom:7px}#map-coordinates{font-size:8px}
+ #interact{bottom:280px;width:max-content;max-width:90vw;font-size:11px;padding:8px 11px}#camp-actions{bottom:280px;max-width:94vw;gap:5px}#camp-actions button{font-size:10px;padding:8px}#camp-budget{font-size:9px}body:has(#camp-actions:not([hidden])) #interact{bottom:354px}
+ #ecology-alternate{bottom:328px;width:max-content;max-width:90vw;font-size:10px}#field-action,body:has(#camp-actions:not([hidden])) #field-action{bottom:372px;width:80vw}#subtitles{bottom:275px;width:88vw}body:has(#interact:not([hidden])) #subtitles{bottom:380px}body:has(#camp-actions:not([hidden])) #subtitles{bottom:420px}body:has(#field-action:not([hidden])) #subtitles{bottom:480px}#subtitles p{font-size:11px}
+ #waypoint,#waypoint.offscreen{max-width:105px;font-size:9px;padding:3px}#waypoint strong{font-size:12px}#notification{top:36%;max-width:90vw}
+}
+@media(max-width:390px){#life-support{width:218px;padding:9px}#hud-portrait.hud-portrait{width:49px;height:70px}#survival-hud{gap:8px}#region-map{width:83px}.radar-frame{width:74px;height:74px}.radar-location{font-size:8px}#map-coordinates{font-size:7px}.compass{width:155px;left:30%}}
+@media(pointer:coarse){#life-support{bottom:152px}#region-map{top:auto;bottom:155px}#pause{top:17px;bottom:auto;left:auto;right:16px;transform:none}#interact{bottom:425px}#camp-actions{bottom:425px;max-width:90vw}#ecology-alternate{bottom:475px}#field-action,body:has(#camp-actions:not([hidden])) #field-action{bottom:520px}#subtitles{bottom:410px}body:has(#interact:not([hidden])) #subtitles{bottom:505px}body:has(#camp-actions:not([hidden])) #subtitles{bottom:550px}}
+@media(pointer:coarse) and (max-width:760px){body:has(#camp-actions:not([hidden])) #interact{bottom:500px}.compass{display:block}#move-stick{bottom:25px}.touch-actions{bottom:25px}}
+@media(max-height:660px) and (min-width:761px){#mission,#planet-status{top:80px}#mission-detail{font-size:11px}.mission-steps{margin-top:8px}#life-support{bottom:16px;padding:10px;width:260px}#hud-portrait.hud-portrait{width:56px;height:75px}#oxygen-value{font-size:28px}#cargo-hud{margin-top:9px;padding-top:9px}#region-map{bottom:20px}.radar-frame{width:112px;height:112px}#interact{bottom:210px}#field-action{bottom:270px}}
+@media(prefers-reduced-motion:reduce){#game-hud,#game-hud *{animation:none!important;transition:none!important}}
+
+.field-telemetry summary kbd{font-size:9px;padding:1px 4px;border-color:var(--hud-line);margin-right:4px}
+@media(pointer:coarse){.field-telemetry summary kbd{display:none}}
