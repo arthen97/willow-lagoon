@@ -1,0 +1,79 @@
+[
+  {
+    "file": "assets/world/camp-station.glb",
+    "provider": "Meshy AI",
+    "license": "Generated project asset",
+    "task_id": "01a144e3-ce42-70c0-ac3d-5a46690cc099",
+    "sha256": "ed2aca7a15a46b108da6d63ac863374c83f503ff73e92a90547c3cdf051432df"
+  },
+  {
+    "file": "assets/world/cave-chamber.glb",
+    "provider": "Ron Kapaun / 3TD Studios",
+    "license": "CC0-1.0",
+    "url": "https://opengameart.org/content/3td-cave-pack-pro-v10",
+    "sha256": "a63efc01abb8d46e7440938e5f582da48ffed744fce50cab5ecb3ff19ed7443d"
+  },
+  {
+    "file": "assets/world/coastal-cliff.glb",
+    "provider": "Poly Haven",
+    "license": "CC0-1.0",
+    "url": "https://polyhaven.com/a/coastal_cliff_01",
+    "sha256": "2eebeca8a17b95ca8b20ea2ee771810e12e1ed34903a775987fbbf2bb1dec320"
+  },
+  {
+    "file": "assets/world/collector.glb",
+    "provider": "Meshy AI",
+    "license": "Generated project asset",
+    "task_id": "01a144e3-c141-742e-85cd-2c50b0b0b72b",
+    "sha256": "b032a3ec8e5af945cab03ee4708343d44f3adb8e3b2f8b6dfd1c91e6744efcdb"
+  },
+  {
+    "file": "assets/world/fan-plant.glb",
+    "provider": "Meshy AI",
+    "license": "Generated project asset",
+    "task_id": "01a144e3-e82c-7590-9203-1444a1f03453",
+    "sha256": "fb6e22c41a2bb9a7e4a880e230b820b45397fdfb4dcf6810e1b8947ad7305c2a"
+  },
+  {
+    "file": "assets/world/lung-plant.glb",
+    "provider": "Meshy AI",
+    "license": "Generated project asset",
+    "task_id": "01a144e3-da61-76db-af36-ad52915f23df",
+    "sha256": "25b303bc61e8c64aab153e5c900b831f10e8e69f5153953f9194c8c21e7c0874"
+  },
+  {
+    "file": "assets/world/oxygen-tank.glb",
+    "provider": "Meshy AI",
+    "license": "Generated project asset",
+    "task_id": "01a144e3-ad68-747a-aab0-f8ac7bc1523d",
+    "sha256": "60525f2395fd296dde43f3d2e4b21ecbe5a7e223503b944a947304b81891fd02"
+  },
+  {
+    "file": "assets/world/ruin-base.glb",
+    "provider": "Ron Kapaun / 3TD Studios",
+    "license": "CC0-1.0",
+    "url": "https://opengameart.org/content/3td-cave-pack-pro-v10",
+    "sha256": "b254dfcbe27d69fb40003b13113463d59652801fbc3549cba3a13d722bf51201"
+  },
+  {
+    "file": "assets/world/ruin-column.glb",
+    "provider": "Ron Kapaun / 3TD Studios",
+    "license": "CC0-1.0",
+    "url": "https://opengameart.org/content/3td-cave-pack-pro-v10",
+    "sha256": "6aa8bf7a645f37703647b3c71874104a5d97150feeb42523877dae47ed125191"
+  },
+  {
+    "file": "assets/world/ruin-debris.glb",
+    "provider": "Ron Kapaun / 3TD Studios",
+    "license": "CC0-1.0",
+    "url": "https://opengameart.org/content/3td-cave-pack-pro-v10",
+    "sha256": "3bf0a5ce1193ecce997863866baafa3baba46aaa8745fa522b86bd919fb2feba"
+  },
+  {
+    "file": "assets/world/ruin-wall.glb",
+    "provider": "Ron Kapaun / 3TD Studios",
+    "license": "CC0-1.0",
+    "url": "https://opengameart.org/content/3td-cave-pack-pro-v10",
+    "sha256": "17131f2a19cadc37e356f6bfb1fa96e4aa02f8070de2d1e5db5fb116b0f9ed1e"
+  }
+]

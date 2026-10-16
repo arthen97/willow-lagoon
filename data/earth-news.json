@@ -1,0 +1,37 @@
+{
+  "articles": [
+    {
+      "title": "Zelensky says Ukraine has right to defend itself after Trump criticism",
+      "url": "https://www.bbc.co.uk/news/articles/c58jz174w89ro?at_medium=RSS&at_campaign=rss",
+      "publishedAt": "Fri, 16 Oct 2026 13:25:48 GMT",
+      "source": "BBC World",
+      "timeLabel": "发布时间"
+    },
+    {
+      "title": "'It's really hard to believe' - How Oregon primary school shooting unfolded",
+      "url": "https://www.bbc.co.uk/news/videos/cwe8r29mjd05o?at_medium=RSS&at_campaign=rss",
+      "publishedAt": "Fri, 16 Oct 2026 08:27:16 GMT",
+      "source": "BBC World",
+      "timeLabel": "发布时间"
+    },
+    {
+      "title": "Ship attack reports near Hormuz reach record high as oil exports slow",
+      "url": "https://www.bbc.co.uk/news/articles/cmde8dpg8g0no?at_medium=RSS&at_campaign=rss",
+      "publishedAt": "Fri, 16 Oct 2026 05:00:17 GMT",
+      "source": "BBC World",
+      "timeLabel": "发布时间"
+    },
+    {
+      "title": "China tells Israel to stop 'forced establishment' of West Bank settlements",
+      "url": "https://www.bbc.co.uk/news/articles/cq1j3wdxy48ro?at_medium=RSS&at_campaign=rss",
+      "publishedAt": "Fri, 16 Oct 2026 08:45:54 GMT",
+      "source": "BBC World",
+      "timeLabel": "发布时间"
+    }
+  ],
+  "source": "BBC 世界新闻 · 备用新闻源",
+  "fetchedAt": "2026-10-16T14:17:37.071Z",
+  "id": "f9914cf8342b024c1718",
+  "stale": false,
+  "audioUrl": "./assets/story/earth/f9914cf8342b024c1718.mp3"
+}
