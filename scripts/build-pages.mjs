@@ -1,3 +1,4 @@
+import './build-opening.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 const root=process.cwd(),out=path.join(root,'dist');await fs.mkdir(out,{recursive:true});

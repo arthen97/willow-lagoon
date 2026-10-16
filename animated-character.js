@@ -8,15 +8,19 @@ export function createAnimatedCharacter(asset,actor){
  for(const c of clips){const track=c.tracks.find(t=>t.name==='Hips.position');if(track){const v=track.values;const baseX=v[0],baseZ=v[2];for(let i=0;i<v.length;i+=3){v[i]-=baseX;v[i+2]=hips.position.z;}}}
  const actions={idle:mixer.clipAction(clips.find(c=>c.name==='Idle')),walk:mixer.clipAction(clips.find(c=>c.name==='Casual_Walk')),run:mixer.clipAction(clips.find(c=>c.name==='Run_02')),jump:mixer.clipAction(clips.find(c=>c.name==='Regular_Jump'))};
  for(const [id,a]of Object.entries(actions)){a.play();a.setEffectiveWeight(id==='idle'?1:0);if(id==='jump'){a.setLoop(THREE.LoopOnce,1);a.clampWhenFinished=true;a.paused=true;}}
+ let strikeClock=1,previousStrike=0;const strikeArm=model.getObjectByName('RightArm'),strikeForearm=model.getObjectByName('RightForeArm');
  let idleWeight=1,walkWeight=0,runWeight=0,jumpWeight=0,lastStage='ground';
  const jumpDuration=actions.jump.getClip().duration;
- return {body,root,mixer,actions,mount(object,boneName){actor.updateMatrixWorld(true);model.getObjectByName(boneName)?.attach(object);},update(dt,{speed,jumpStage,jumpPhase,landing}){
+ return {body,root,mixer,actions,strike(){strikeClock=0;},mount(object,boneName){actor.updateMatrixWorld(true);model.getObjectByName(boneName)?.attach(object);},update(dt,{speed,jumpStage,jumpPhase,landing}){
+  if(strikeArm)strikeArm.rotation.x-=previousStrike*.7;if(strikeForearm)strikeForearm.rotation.z+=previousStrike*.35;
+  strikeClock+=dt;const strikePulse=strikeClock<.42?Math.sin(strikeClock/.42*Math.PI):0;
   const jumping=jumpStage!=='ground';const moving=THREE.MathUtils.smoothstep(speed,.06,.45),run=THREE.MathUtils.smoothstep(speed,1.7,3.1);
   idleWeight=THREE.MathUtils.damp(idleWeight,jumping?0:1-moving,12,dt);walkWeight=THREE.MathUtils.damp(walkWeight,jumping?0:moving*(1-run),12,dt);runWeight=THREE.MathUtils.damp(runWeight,jumping?0:moving*run,12,dt);jumpWeight=THREE.MathUtils.damp(jumpWeight,jumping?1:0,22,dt);
   actions.idle.setEffectiveWeight(idleWeight);actions.walk.setEffectiveWeight(walkWeight);actions.run.setEffectiveWeight(runWeight);actions.jump.setEffectiveWeight(jumpWeight);
   actions.walk.setEffectiveTimeScale(THREE.MathUtils.clamp(speed/1.35,.65,1.45));actions.run.setEffectiveTimeScale(THREE.MathUtils.clamp(speed/3.5,.72,1.2));
   if(jumping){if(lastStage==='ground'){actions.jump.reset().play();actions.jump.paused=true;}let t=0;if(jumpStage==='anticipate')t=jumpPhase*.27;else if(jumpStage==='air')t=.27+jumpPhase*.36;else t=.63+jumpPhase*.37;actions.jump.time=t*jumpDuration;}
   mixer.update(dt);if(jumpStage==='air'&&hips)hips.position.y=98; // World-space gravity owns the flight arc, avoiding double vertical motion.
+  if(strikeArm)strikeArm.rotation.x+=strikePulse*.7;if(strikeForearm)strikeForearm.rotation.z-=strikePulse*.35;previousStrike=strikePulse;root.rotation.z=strikePulse*.055;
   root.rotation.x=THREE.MathUtils.damp(root.rotation.x,jumping?0:-run*.045,9,dt);lastStage=jumpStage;
  }};
 }

@@ -45,5 +45,20 @@ export async function createStoryWorld({scene,loader,groundHeight,walker}){
    materials(node.object,m=>{m.emissive.setHex(0x62e7cc);m.emissiveIntensity=.08;if(!node.glow)node.glow=m;});
   }
  }
- return {nodes,group,assetStatus,scanUntil:0,update(time,progress){for(const n of nodes){if(n.glow){const depleted=(progress.cooldowns.get(n.id)||0)>time;n.glow.emissiveIntensity=depleted?.025:time<this.scanUntil?1.4:n.type==='relay'&&progress.complete?1:.18+Math.sin(time*1.5+n.x)*.07;}}}};
+ const chips=[];let worldTime=0;
+ function hitStatue(node){
+  if(!node?.object||node.type!=='archive')return;
+  node.hitAt=worldTime;node.restRotation??=node.object.rotation.clone();
+  const debris=assets.debris;
+  for(let i=0;i<5;i++){
+   const bit=instance(debris,.035+Math.random()*.045);bit.position.copy(node.object.position);bit.position.y+=.45+Math.random()*.5;
+   bit.userData.velocity=new THREE.Vector3((Math.random()-.5)*2.7,1+Math.random()*1.5,(Math.random()-.5)*2.7);bit.userData.born=worldTime;
+   bit.traverse(o=>{if(o.isMesh)o.castShadow=false;});group.add(bit);chips.push(bit);
+  }
+ }
+ return {nodes,group,assetStatus,hitStatue,scanUntil:0,update(time,progress){
+ const dt=Math.min(.05,Math.max(0,time-worldTime));worldTime=time;
+ for(const n of nodes)if(n.restRotation){const age=time-n.hitAt;n.object.rotation.copy(n.restRotation);if(age<1){const wobble=Math.sin(age*34)*Math.exp(-age*6)*.12;n.object.rotation.z+=wobble;n.object.rotation.x+=wobble*.6;}}
+ for(let i=chips.length-1;i>=0;i--){const bit=chips[i],age=time-bit.userData.born;bit.userData.velocity.y-=dt*6;bit.position.addScaledVector(bit.userData.velocity,dt);bit.rotation.x+=dt*4;bit.rotation.z+=dt*3;bit.scale.multiplyScalar(Math.exp(-dt*1.6));if(age>1.3){group.remove(bit);bit.traverse(o=>{if(o.isMesh)for(const m of(Array.isArray(o.material)?o.material:[o.material]))m.dispose();});chips.splice(i,1);}}
+for(const n of nodes){if(n.glow){const depleted=(progress.cooldowns.get(n.id)||0)>time;n.glow.emissiveIntensity=depleted?.025:time<this.scanUntil?1.4:n.type==='relay'&&progress.complete?1:.18+Math.sin(time*1.5+n.x)*.07;}}}};
 }

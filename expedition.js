@@ -6,8 +6,9 @@ const $=s=>document.querySelector(s),STORE='willow-camp-expedition-v3',CAPACITY=
 export function createExpedition({walker,state,world,notify,openDialog,resume,ambientSound}){
  let saved={};try{saved=JSON.parse(localStorage.getItem(STORE)||'{}');}catch{}
  const progress=createProgress(saved),nodes=world.nodes;
- const game={cargo:saved.cargo||0,reserve:saved.reserve??25,delivered:saved.delivered||0,dew:saved.dew||0,deployments:saved.deployments||{},salvaged:new Set(saved.salvaged||[]),harvesting:false,relayStage:saved.relayStage||0,cargoKinds:saved.cargoKinds||[],deliveredKinds:saved.deliveredKinds||[],contactDelivery:saved.contactDelivery??-1};
+ const game={cargo:saved.cargo||0,reserve:saved.reserve??25,delivered:saved.delivered||0,dew:saved.dew||0,deployments:saved.deployments||{},salvaged:new Set(saved.salvaged||[]),harvesting:false,relayStage:saved.relayStage||0,cargoKinds:saved.cargoKinds||[],deliveredKinds:saved.deliveredKinds||[],statueHits:saved.statueHits||{},contactDelivery:saved.contactDelivery??-1};
  progress.discovered.add('camp');progress.discovered.add('silver-a');
+ let strikeReady=0,banterReady=0;
  let sessionTime=saved.sessionTime||0,nearest=null,harvest=null,valve=null,scanReady=0,started=false,muted=false,clip=null,captionTimer,hudClock=0,saveClock=0,lowWarned=false,stormWas=false,radioBusy=false;
  const heard=new Set(),subtitle=$('#subtitles'),journal=$('#journal-dialog'),radio=$('#earth-dialog');
  for(const [id,t]of Object.entries(saved.cooldowns||{}))progress.cooldowns.set(id,t);
@@ -92,11 +93,22 @@ export function createExpedition({walker,state,world,notify,openDialog,resume,am
  $('#close-earth').onclick=()=>{stopVoice();resume();};radio.addEventListener('cancel',e=>{e.preventDefault();stopVoice();resume();});
  function openJournal(){openDialog(journal);$('#journal-entries').replaceChildren();const notes=[`带回营地 ${Math.round(game.delivered)} L · 储备 ${Math.round(game.reserve)} L。蓝息质是集氧凝胶；采集罐储存凝胶和氧气。T 应急转气，回营地保持 E 插罐释放、H 补给、R 领取地球任务。`,'银色呼吸花：观察开合，展开后保持 E 连接收集管。55 秒恢复。','透明露囊：保持 E 采集营养液；喂给骨白色肺囊，换取 48 L 氧气。','洞内蓝脉菌床：按 E 放置抽气器，18 秒后回来收取 40 L。装置只有一台。','潮汐气孔：在压力表绿色区域按 E，完成三次密封，取得 32 L。','坠毁货舱：回收一只应急氧气罐，24 L，仅可取一次。','新闻终端接收现实世界新闻。TRAPPIST-1 e 上的生态、遗迹、未来名人留言均属虚构。'];for(const text of notes){const p=document.createElement('p');p.textContent=text;$('#journal-entries').append(p);}for(const n of nodes.filter(n=>progress.archives.has(n.id))){const h=document.createElement('h3'),p=document.createElement('p');h.textContent=n.title;p.textContent=n.clue;$('#journal-entries').append(h,p);}}
  $('#journal-open').onclick=openJournal;$('#close-journal').onclick=()=>resume();journal.addEventListener('cancel',e=>{e.preventDefault();resume();});
- addEventListener('keydown',e=>{if(!state.gameStarted||e.target.matches?.('input,textarea'))return;if(e.code==='KeyJ'&&!e.repeat){e.preventDefault();if(journal.open)resume();else if(!state.paused)openJournal();}if(state.paused||e.repeat)return;if(e.code==='KeyQ')scan();if(e.code==='KeyT')emergency();if(e.code==='KeyH')refill();if(e.code==='KeyR')void earth();});
+ addEventListener('keydown',e=>{if(!state.gameStarted||e.target.matches?.('input,textarea'))return;if(e.code==='KeyJ'&&!e.repeat){e.preventDefault();if(journal.open)resume();else if(!state.paused)openJournal();}if(state.paused||e.repeat)return;if(e.code==='KeyF')strike();if(e.code==='KeyQ')scan();if(e.code==='KeyT')emergency();if(e.code==='KeyH')refill();if(e.code==='KeyR')void earth();});
  addEventListener('keyup',e=>{if(e.code==='KeyE')cancelHarvest();});
  $('#interact').addEventListener('pointerdown',e=>{e.preventDefault();$('#interact').setPointerCapture(e.pointerId);interact();});for(const name of ['pointerup','pointercancel','lostpointercapture'])$('#interact').addEventListener(name,cancelHarvest);
  $('#camp-insert').addEventListener('pointerdown',e=>{if(state.paused)return;e.preventDefault();e.currentTarget.setPointerCapture(e.pointerId);if(distance(CAMP)<=2.7&&game.cargo>0)begin(CAMP,2.4,'insert');else notify('带着蓝息质采集罐，靠近营地接口再保持 E');});for(const event of ['pointerup','pointercancel','lostpointercapture'])$('#camp-insert').addEventListener(event,cancelHarvest);
  $('#tank-transfer').onclick=emergency;$('#camp-refill').onclick=refill;$('#camp-radio').onclick=()=>void earth();$('#scan-button').onclick=scan;
+ function nearbyStatue(){return nodes.filter(n=>n.type==='archive'&&n.object&&Math.hypot(n.object.position.x-walker.actor.position.x,n.object.position.z-walker.actor.position.z)<2.2).sort((a,b)=>distance(a)-distance(b))[0];}
+ function strike(){
+  if(!started||state.paused||sessionTime<strikeReady)return;
+  const n=nearbyStatue();if(!n){notify('靠近石膏雕像后按 F，或点击敲击按钮');return;}
+  if(walker.airborne||walker.motionSpeed>.8){notify('停稳后再敲击雕像');return;}
+  cancelHarvest();strikeReady=sessionTime+.65;walker.face?.(n.object.position.x,n.object.position.z);walker.animation.strike?.();world.hitStatue?.(n);ambientSound.impact?.();game.statueHits[n.id]=(game.statueHits[n.id]||0)+1;
+  document.body.classList.remove('statue-impact');void document.body.offsetWidth;document.body.classList.add('statue-impact');setTimeout(()=>document.body.classList.remove('statue-impact'),220);
+  const count=game.statueHits[n.id];if(count===3){progress.archives.add(n.id);notify('石膏封层松动 · '+n.clue);}else notify(`${n.name} · 敲击 ${count} 次 · ${count<3?'再敲几下，看看封层背后有什么':'差评已用物理方式送达'}`);
+  if(sessionTime>=banterReady){banterReady=sessionTime+12;speak(n.portrait);}save();
+ }
+ $('#strike-statue').onclick=strike;
  function scan(){if(state.paused)return;if(sessionTime<scanReady){notify(`扫描冷却 · ${Math.ceil(scanReady-sessionTime)} 秒`);return;}scanReady=sessionTime+12;world.scanUntil=sessionTime+6;let count=0;for(const n of nodes)if(distance(n)<22){if(!progress.discovered.has(n.id))count++;progress.discovered.add(n.id);}notify(`发现 ${count} 处新生态信号 · 扫描不耗氧`);save();}
  function nextObjective(){
   const stage=game.relayStage,required=stage>0&&stage<4?dispatches[stage-1].kind:null;
@@ -129,10 +141,11 @@ export function createExpedition({walker,state,world,notify,openDialog,resume,am
   hudClock+=dt;if(hudClock<.15)return;hudClock=0;
   let best=2.7;nearest=null;for(const n of nodes){const d=distance(n);if(d<7)progress.discovered.add(n.id);if(d<best){best=d;nearest=n;}}
   $('#interact').hidden=!nearest;if(nearest){const n=nearest;let prompt=n.type==='camp'?game.cargo>0?'保持 E · 插入蓝息质采集罐':'R · 接通地球 / H · 补给':n.type==='archive'?'播放留言':n.type==='lung'?game.dew?'保持 E · 喂养取气':'需要营养露囊':n.type==='siphon'||n.species==='moss'?game.deployments[n.id]?game.deployments[n.id].remaining>0?`抽气中 ${Math.ceil(game.deployments[n.id].remaining)}s`:'收回满罐':'放置抽气器':n.type==='vent'?'按 E · 密封取气':n.species==='silver'?flowerOpen(n)?'展开 · 保持 E 采集蓝息质':'闭合 · 等待展开':'保持 E 收集';$('#interact-label').textContent=n.name+' · '+prompt;}
+  $('#strike-statue').hidden=!nearbyStatue();
   $('#cargo-value').textContent=Math.floor(game.cargo);$('#cargo-fill').style.width=game.cargo/CAPACITY*100+'%';$('#camp-reserve').textContent=Math.floor(game.reserve)+' L';$('#dew-value').textContent=game.dew+'/3';$('#camp-actions').hidden=distance(CAMP)>3.8;$('#camp-insert').disabled=game.cargo<=0;$('#camp-radio').textContent=game.delivered>=28?'R · 地球任务通信':'先插入第一罐蓝息质';$('#scan-cooldown').textContent=sessionTime<scanReady?`${Math.ceil(scanReady-sessionTime)}s`:'扫描';
   $('#event-label').textContent=storm?sheltered?'洞窟 / 营地掩护':'孢子锋面 · 额外耗氧':'下一次孢子锋面';$('#event-time').textContent=Math.ceil(storm?127-phase:phase<=100?100-phase:245-phase)+'s';$('#event-banner').dataset.danger=String(storm&&!sheltered);
   $('#biome-label').textContent=Math.abs(walker.actor.position.x+18)<5&&walker.actor.position.z>34?'蓝脉洞窟':walker.actor.position.z>20?'骨帆共生林':'坠落湾 · 零号营地';updateMission();
  }
  addEventListener('pagehide',save);
- updateMission();return {update,interact,target,progress,nodes,game,openJournal,scan,stopVoice,cancelHarvest,deposit,refill,earth,emergency,get sessionTime(){return sessionTime;},get repair(){return !!valve;},setMuted(value){muted=value;if(clip)clip.volume=value?0:.9;ambientSound.setDucked?.(!!clip&&!value);},start(){started=true;notify(game.relayStage?'远征记录已恢复 · 按当前任务继续行动':'第一步：跟随金色标记，靠近银白植物并保持 E 采集蓝息质。');updateMission();}};
+ updateMission();return {update,interact,strike,target,progress,nodes,game,openJournal,scan,stopVoice,cancelHarvest,deposit,refill,earth,emergency,get sessionTime(){return sessionTime;},get repair(){return !!valve;},setMuted(value){muted=value;if(clip)clip.volume=value?0:.9;ambientSound.setDucked?.(!!clip&&!value);},start(){started=true;speak('campIntro',true);notify(game.relayStage?'远征记录已恢复 · 按当前任务继续行动':'第一步：跟随金色标记，靠近银白植物并保持 E 采集蓝息质。');updateMission();}};
 }

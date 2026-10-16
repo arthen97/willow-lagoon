@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {createAnimatedCharacter} from './animated-character.js?v=20261016-camp';
+import {createAnimatedCharacter} from './animated-character.js?v=20261016-cg';
 import {oxygenDrain} from './survival.js';
 
 export function canStand(x,z,heightAt,obstacles,clearance=0) {
@@ -149,5 +149,5 @@ export function createWalker({scene,model,camera,controls,renderer,ground,ground
     statusTime+=dt;
     if(statusTime>.25){statusTime=0;status.dataset.x=actor.position.x.toFixed(2);status.dataset.z=actor.position.z.toFixed(2);status.textContent=(state.paused?'动画已暂停':jumpHeight>.045?'腾空中':moving?reason:['行走中','奔跑中'].includes(reason)?'已抵达':reason)+' · '+travel.toFixed(1)+' m';if(enabled){updateHud();document.querySelector('#stamina-fill').style.width=stamina.toFixed(0)+'%';}}
   }
-  return {actor,body,animation,update,enable,goTo,clearInput,setInput,addOxygen,refillOxygen,respawn,get enabled(){return enabled;},get distance(){return travel;},get motion(){return motion;},get motionSpeed(){return motionSpeed;},get oxygen(){return oxygen;},get stamina(){return stamina;},get airborne(){return jumpHeight>.01;},obstacles};
+  return {actor,body,animation,face(x,z){heading=Math.atan2(actor.position.x-x,actor.position.z-z);actor.rotation.y=heading;},update,enable,goTo,clearInput,setInput,addOxygen,refillOxygen,respawn,get enabled(){return enabled;},get distance(){return travel;},get motion(){return motion;},get motionSpeed(){return motionSpeed;},get oxygen(){return oxygen;},get stamina(){return stamina;},get airborne(){return jumpHeight>.01;},obstacles};
 }

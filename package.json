@@ -6,13 +6,19 @@
   "scripts": {
     "start": "node server.mjs",
     "build": "node scripts/build-pages.mjs",
-    "refresh:earth": "node scripts/refresh-earth.mjs"
+    "refresh:earth": "node scripts/refresh-earth.mjs",
+    "build:opening": "node scripts/build-opening.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "UNLICENSED",
   "type": "module",
   "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }

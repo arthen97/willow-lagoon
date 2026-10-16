@@ -72,3 +72,11 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - New score and two environmental beds: Merouter / ElevenLabs Music v1. Runtime loops: approximately 85s score, 50s exterior atmosphere and 57s cave atmosphere, mastered with a 3-second seam crossfade and normalized loudness. Separate stems crossfade by player position and duck under English speech. They replace the old ambient loop and local noise synthesis.
 - Runtime materials preserve imported PBR maps. No flat white material override is applied. Earlier procedural camp, cylinders, fan plants, cave and generated mountain geometry are retired. The earlier modeled willow and escape pod remain legacy assets in the original shore scene; they are not represented as downloaded CC0 models.
 - Runtime source and SHA256 manifest: `assets/world/manifest.json`. Raw downloads, task records and editable Blender checkpoints are retained in the local production archive and excluded from the public game repository.
+
+
+## 开场与交互 · 2026-10-16
+
+- Tech Text：React Bits / David Haz，官方 JS-CSS 组件集成于游戏开场。来源：https://reactbits.dev/text-animations/tech-text 。许可证：`assets/ui/REACT-BITS-LICENSE.md`（MIT + Commons Clause）。React 运行时许可证保留于打包文件附带 notices。
+- 剧情序章：Merouter / Seedance 2.5（服务返回模型 `dreamina-seedance-2-5-260628`），24 秒 CG。
+- 序章英语旁白：Merouter / Eleven v4，沿用主角原创演员音色。
+- 雕像打击碎屑复用既有 CC0 岩石资产；原有 Meshy 石膏像和幽默配音保留。

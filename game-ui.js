@@ -1,3 +1,4 @@
+import {createPrologue} from './prologue.js';
 import * as THREE from 'three';
 import {createExpedition} from './expedition.js?v=20261016-blue';
 
@@ -25,6 +26,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
   const pauseMenu=$('#pause-menu'),mapDialog=$('#map-dialog'),credits=$('#credits-dialog');
   const mini=$('#minimap'),full=$('#full-map'),compass=$('#compass-canvas');
   const direction=new THREE.Vector3(),offset=new THREE.Vector3(),sphere=new THREE.Spherical(),projected=new THREE.Vector3();
+  const prologue=createPrologue({enter:start});
   let started=false,ready=false,wasLocked=false,sensitivity=1,soundOn=false,soundPending=false,hudTime=0,notificationTimer,hintTimer;
   state.gameStarted=false;state.paused=true;controls.enabled=false;
   const expedition=createExpedition({walker,state,world,notify,openDialog:pause,resume,ambientSound});
@@ -64,11 +66,12 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     if(!ready||started)return;started=true;state.gameStarted=true;state.paused=false;
     walker.enable(true);controls.maxDistance=8;controls.enableDamping=false;
     $('#game-hud').hidden=false;document.body.classList.add('game-started');$('#loader').setAttribute('aria-hidden','true');$('#loader').inert=true;
-    void toggleSound();lockCamera();expedition.start();updateHud();
+    window.dispatchEvent(new Event('expedition-started'));void toggleSound();lockCamera();expedition.start();updateHud();
     hintTimer=setTimeout(()=>document.body.classList.add('hint-faded'),14000);
   }
   function interact(){expedition.interact();}
-  $('#start-game').onclick=start;$('#pause').onclick=()=>pause();$('#resume-game').onclick=()=>resume();
+  $('#close-opening-guide').onclick=()=>{$('#opening-brief').classList.remove('guide-selected');$('#opening-guide').setAttribute('aria-expanded','false');$('#opening-guide').focus();};
+  $('#start-game').onclick=()=>{if(ready)prologue.requestStart();};$('#watch-story').onclick=()=>prologue.play(false);$('#opening-guide').onclick=()=>{const shown=$('#opening-guide').getAttribute('aria-expanded')!=='true';$('#opening-guide').setAttribute('aria-expanded',String(shown));$('#opening-brief').classList.toggle('guide-selected',shown);};$('#pause').onclick=()=>pause();$('#resume-game').onclick=()=>resume();
   $('#map-toggle').onclick=()=>pause(mapDialog);$('#close-map').onclick=()=>resume();$('#interact').onclick=null;
   $('#sound').onclick=toggleSound;syncSound();
   $('#settings-toggle').onclick=()=>{const open=$('#game-settings').hidden;$('#game-settings').hidden=!open;$('#settings-toggle').setAttribute('aria-expanded',String(open));$('#settings-toggle span').textContent=open?'−':'＋';};
@@ -78,7 +81,8 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
   $('#credits').onclick=()=>credits.showModal();$('#close-credits').onclick=()=>credits.close();
   for(const dialog of [pauseMenu,mapDialog])dialog.addEventListener('cancel',e=>{e.preventDefault();resume();});
   addEventListener('keydown',e=>{
-    if(!started){if(e.code==='Enter'){e.preventDefault();start();}return;}
+    if(prologue.active)return;
+    if(!started){const choices=[...document.querySelectorAll('.opening-choice:not(:disabled)')];if(e.code==='ArrowDown'||e.code==='ArrowUp'){e.preventDefault();const i=choices.indexOf(document.activeElement);choices[(i+(e.code==='ArrowDown'?1:-1)+choices.length)%choices.length]?.focus();}else if(e.code==='Enter'&&!e.target.closest('button')){e.preventDefault();if(ready)prologue.requestStart();}return;}
     if(credits.open)return;
     if(e.code==='Escape'){
       e.preventDefault();e.stopImmediatePropagation();if(state.paused)resume();else pause();return;
