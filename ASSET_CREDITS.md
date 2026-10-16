@@ -92,3 +92,8 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 ## 2026-10-16 · Social introduction image
 
 - `assets/social/earth-do-you-copy-intro.jpg`: promotional layout made with the built-in image-generation tool, using this project’s Merouter Midjourney 8.1 cover as reference. Chinese typography explains the gameplay loop. Marked as concept artwork, not a gameplay screenshot.
+
+## English social artwork
+
+- Replaced the Chinese promotional lettering with English using the built-in image editing tool, retaining the existing Midjourney-based artwork. Current file: `assets/social/earth-do-you-copy-intro-en.jpg`; the previous generic introduction URL also serves the English version. Prompt and workflow: `docs/social-poster-en.md`.
+- Bird silhouettes reuse the existing project geometry; only grouping and flight animation changed. Landscape meshes remain the existing CC0 scans and original island.

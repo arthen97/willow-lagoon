@@ -8,9 +8,9 @@
 
 这一版更新了自然地表、统一光照和远景大气层次。欢迎帮忙试玩，尤其想听听：第一轮采集流程是否清楚、跑跳手感如何、探索是否有趣。
 
-试玩：https://arthen97.github.io/willow-lagoon/?v=atmosphere
+试玩：https://arthen97.github.io/willow-lagoon/?v=horizon
 
 操作：WASD 移动，Shift 奔跑，Space 跳跃；E 采集/插罐，R 在营地联系地球，M 地图。
 
-配图：assets/social/earth-do-you-copy-intro.jpg
+配图：assets/social/earth-do-you-copy-intro-en.jpg
 图片为宣传概念图，非实机截图。

@@ -81,3 +81,7 @@ React Bits Tech Text 的来源及许可证见资产说明。运行 `node scripts
 ### 2026-10-16 · 自然光照与对岸大气
 
 移除地表青蓝染色，恢复岩土与苔绿贴图色彩；统一天空、日光与水面高光方向，关闭额外轮廓光和近景光柱，降低辉光与局部发光。晴天雾范围改为 85–2100 米，对岸山体重新处于可见范围，风暴时渐变至 25–850 米。飞书文案见 `docs/feishu-intro.md`，介绍图见 `assets/social/earth-do-you-copy-intro.jpg`。
+
+### Horizon, cool atmosphere and bird flocks
+
+Moved the added distant cliff meshes to 1.05–1.5 km away; bounded the footprint of wide scanned cliff assets near the island and cave. Preserved the original distant island. Cooler daylight, sky and shadows retain natural terrain colors. The existing bird silhouettes now form three continuous orbiting flocks (24 birds). English promotional artwork: `assets/social/earth-do-you-copy-intro-en.jpg`.
