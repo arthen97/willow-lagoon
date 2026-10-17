@@ -1,0 +1,25 @@
+[
+  {
+    "source": "coastal-cliff",
+    "meshes": [
+      {
+        "name": "coastal_cliff_01",
+        "boundary_edges_before": 7711,
+        "small_holes_closed": 15,
+        "shell_thickness_m": 0.32
+      }
+    ],
+    "end_taper_fraction": 0.085
+  },
+  {
+    "source": "cave-chamber",
+    "meshes": [
+      {
+        "name": "CC0_CAVE_CHAMBER",
+        "boundary_edges_before": 20,
+        "small_holes_closed": 0,
+        "shell_thickness_m": 0.09
+      }
+    ]
+  }
+]

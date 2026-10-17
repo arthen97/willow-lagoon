@@ -91,5 +91,21 @@
     "url": "https://kenney.nl/assets/nature-kit",
     "sha256": "b192523736f32754788de4dc7a5dcf30a58322b260ec8969120c91432a10b633",
     "use": "Living shoreline / root recovery feedback; source geometry retained"
+  },
+  {
+    "file": "assets/world/cave-chamber-sealed.glb",
+    "provider": "Ron Kapaun / 3TD Studios",
+    "license": "CC0-1.0",
+    "url": "https://opengameart.org/content/3td-cave-pack-pro-v10",
+    "sha256": "212ba8c482ccb965018275f1fbedf57e03b072e321c80c3a4efb537432e12f8a",
+    "modifications": "Weld duplicate vertices; close small isolated holes; smooth normals; add solid shell and rim faces. Coastal scan ends taper into buried base. Original UVs and textures retained."
+  },
+  {
+    "file": "assets/world/coastal-cliff-sealed.glb",
+    "provider": "Poly Haven",
+    "license": "CC0-1.0",
+    "url": "https://polyhaven.com/a/coastal_cliff_01",
+    "sha256": "f947a8538e3687eddaf65af15bd608f2bd5dbbe63f86a1331aede79d5c6d3764",
+    "modifications": "Weld duplicate vertices; close small isolated holes; smooth normals; add solid shell and rim faces. Coastal scan ends taper into buried base. Original UVs and textures retained."
   }
 ]

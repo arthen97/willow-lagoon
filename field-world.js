@@ -12,7 +12,7 @@ export const FIELD_NODES=[
 ];
 export async function createFieldWorld({scene,loader,walker,world,groundHeight}){
  const names=['oxygen-tank','collector','camp-station','lung-plant','fan-plant','coastal-cliff','cave-chamber'];
- const sources=Object.fromEntries(await Promise.all(names.map(async n=>[n,await asset(loader,n)])));
+ const sources=Object.fromEntries(await Promise.all(names.map(async n=>[n,await asset(loader,['coastal-cliff','cave-chamber'].includes(n)?n+'-sealed':n)])));
  const rocks=(await loader.loadAsync('./assets/rocks/rock_moss_set_01_4k.gltf')).scene;
  const group=new THREE.Group();group.name='FIELD_ECOLOGY_AND_CAMP';scene.add(group);
  function put(name,x,z,h,rotation=0,y=groundHeight(x,z),parent=group){const o=instance(sources[name],h,{rotation});o.name=name;o.position.set(x,y,z);parent.add(o);return o;}
@@ -38,11 +38,13 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
   n.object=o;
  }
  // Downloaded CC0 chamber: original UVs, stone albedo and normal map are embedded.
- const cavern=sources['cave-chamber'].clone(true);cavern.name='ENTERABLE_CAVE';cavern.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)-.10,CAVE.z);group.add(cavern);materials(cavern,m=>{m.side=THREE.DoubleSide;m.envMapIntensity=.25;});cavern.updateMatrixWorld(true);
+ const cavern=sources['cave-chamber'].clone(true);cavern.name='ENTERABLE_CAVE';cavern.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)-.10,CAVE.z);group.add(cavern);materials(cavern,m=>{m.side=THREE.DoubleSide;m.envMapIntensity=.45;m.roughness=.88;});cavern.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});cavern.updateMatrixWorld(true);
+ // Keep the original collision surface while the repaired shell changes only rendering.
+ const collisionCave=(await asset(loader,'cave-chamber')).clone(true);collisionCave.position.copy(cavern.position);materials(collisionCave,m=>{m.side=THREE.DoubleSide;});collisionCave.updateMatrixWorld(true);
  // Derive side blockers from the imported cave wall at body height.
- const ray=new THREE.Raycaster();for(let z=35;z<=51;z+=.65)for(const side of[-1,1]){ray.set(new THREE.Vector3(CAVE.x,cavern.position.y+1.1,z),new THREE.Vector3(side,0,0));const hit=ray.intersectObject(cavern,true)[0];if(hit&&hit.distance<8)walker.obstacles.push({x:hit.point.x,z,r:.36,h:6});}
+ const ray=new THREE.Raycaster();for(let z=35;z<=51;z+=.65)for(const side of[-1,1]){ray.set(new THREE.Vector3(CAVE.x,cavern.position.y+1.1,z),new THREE.Vector3(side,0,0));const hit=ray.intersectObject(collisionCave,true)[0];if(hit&&hit.distance<8)walker.obstacles.push({x:hit.point.x,z,r:.36,h:6});}
  const caveSign=label('蓝脉洞窟','避风  /  放置抽气器，再回来收罐',2.6);caveSign.position.set(CAVE.x-3.6,groundHeight(CAVE.x,CAVE.z)+1.5,33.6);caveSign.rotation.y=Math.PI+.3;
- for(let k=0;k<3;k++){const l=new THREE.PointLight(0x9acbc3,4,7,2);l.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)+1.8,38+k*4);group.add(l);}
+ for(let k=0;k<3;k++){const l=new THREE.PointLight(0x9acbc3,2.2,6,2);l.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)+1.8,38+k*4);group.add(l);}
  for(let k=0;k<8;k++){const colony=put('fan-plant',CAVE.x+Math.sin(k*2.9)*3.2,37+k*1.6,.3+(k%3)*.12,k);materials(colony,m=>{m.emissive.setHex(0x57d7ca);m.emissiveMap=m.map;m.emissiveIntensity=1.15;});}
  // The original ISLAND mesh is one continuous landform across the lake.
  // Do not add isolated scan slabs offshore or beyond the walkable ground edge.
@@ -52,7 +54,9 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
   const size=new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
   const factor=Math.min(1,maxSpan/Math.max(size.x,size.z));
   o.scale.multiplyScalar(factor);
-  o.position.y=groundHeight(x,z)-size.y*factor*.38;
+  o.updateMatrixWorld(true);const footprint=new THREE.Box3().setFromObject(o);let lowest=Infinity;
+  for(let i=0;i<=4;i++)for(let j=0;j<=4;j++)lowest=Math.min(lowest,groundHeight(THREE.MathUtils.lerp(footprint.min.x,footprint.max.x,i/4),THREE.MathUtils.lerp(footprint.min.z,footprint.max.z,j/4)));
+  o.position.y=lowest-size.y*factor*.42;
   o.name='CC0_EMBEDDED_CAVE_ROCK';o.updateMatrixWorld(true);
   materials(o,m=>{m.roughness=Math.max(.88,m.roughness);m.envMapIntensity=.38;});
  }

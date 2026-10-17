@@ -114,3 +114,9 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 ## Field HUD portrait · 2026-10-17
 
 `assets/ui/pilot-portrait.jpg`: AI-generated with the built-in OpenAI image generation tool, using the project's Meshy astronaut inspection images as suit references. Original helmet portrait; no external character likeness. Downscaled and JPEG encoded for the HUD.
+
+## Sunlit world / repaired CC0 assets · 2026-10-17
+
+- `coastal-cliff-sealed.glb`: derivative of the existing Poly Haven Coastal Cliff 01 (CC0). Welded vertices, 15 small holes filled, smooth normals, closed scan rims, tapered end cuts. Original textures and UVs retained.
+- `cave-chamber-sealed.glb`: derivative of the existing Ron Kapaun / 3TD Studios Cave Pack Pro chamber (CC0). Welded vertices, smoothed shading, 9 cm shell with rim faces; intended entrances preserved. Original chamber remains the collision source.
+- Preparation script: `tools/seal_world_assets.py`. Exact preparation counts in `docs/design/2026-10-17-asset-sealing.json`.

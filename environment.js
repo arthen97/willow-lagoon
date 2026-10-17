@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {closeTerrainBoundary} from './terrain-seams.js';
 
 export async function enrichEnvironment(ctx) {
   const {scene,model,rand,gauss,groundHeight,windMaterial,noiseGLSL,renderer}=ctx;
@@ -26,8 +27,8 @@ export async function enrichEnvironment(ctx) {
   }
   boatRough.flipY=old.map.flipY;
   const soil=new THREE.MeshPhysicalMaterial({map:color,normalMap:normal,roughnessMap:rough,
-    color:new THREE.Color(.91,.88,.81),roughness:.96,metalness:0,normalScale:new THREE.Vector2(0,0),
-    envMapIntensity:.4,clearcoat:.035,clearcoatRoughness:.65});
+    color:new THREE.Color(.91,.88,.81),roughness:.9,metalness:0,normalScale:new THREE.Vector2(.28,.28),
+    envMapIntensity:1.0,clearcoat:.18,clearcoatRoughness:.32});
   soil.onBeforeCompile=s=>{
     s.vertexShader='varying vec3 vSoil;\n'+s.vertexShader;
     s.vertexShader=s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvSoil=position;');
@@ -35,10 +36,10 @@ export async function enrichEnvironment(ctx) {
     s.fragmentShader=s.fragmentShader.replace('#include <map_fragment>',
       '#include <map_fragment>\nfloat soilPatch=fbm(vSoil.xz*.65); float wet=1.-smoothstep(.01,.23,vSoil.y); diffuseColor.rgb*=mix(vec3(.82,.88,.74),vec3(1.06,1.00,.91),smoothstep(.30,.72,soilPatch)); diffuseColor.rgb*=1.-wet*.20;');
     s.fragmentShader=s.fragmentShader.replace('#include <roughnessmap_fragment>',
-      '#include <roughnessmap_fragment>\nroughnessFactor=clamp(roughnessFactor*.7+.27,.57,.98); roughnessFactor=mix(roughnessFactor,.42,wet*.55);');
+      '#include <roughnessmap_fragment>\nroughnessFactor=clamp(roughnessFactor*.65+.25,.53,.92); roughnessFactor=mix(roughnessFactor,.25,wet*.80);');
   };
-  soil.customProgramCacheKey=()=> 'soil-natural-detail-v6';
-  ground.material=soil;
+  soil.customProgramCacheKey=()=> 'soil-sunlit-wet-edge-v7';
+  ground.material=soil;closeTerrainBoundary(ground);
   model.traverse(o=>{
     if(!o.isMesh)return;
     if(o.material.name==='BOAT'){
@@ -63,7 +64,7 @@ export async function enrichEnvironment(ctx) {
   treeSites.forEach(([x,z,h],i)=>{
     const group=new THREE.Group(),scale=h/6.2;group.name='SHORE_WILLOW_'+i;
     group.position.set(x,groundHeight(x,z),z);group.scale.set(scale*(.82+rand()*.25),scale,scale*(.8+rand()*.3));group.rotation.y=i*2.29+.6;
-    for(const part of parts){const mesh=new THREE.Mesh(part.geometry,part.material);mesh.castShadow=i<2||i===3;mesh.receiveShadow=true;group.add(mesh);}
+    for(const part of parts){const mesh=new THREE.Mesh(part.geometry,part.material);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);}
     scene.add(group);obstacles.push({x,z,r:.25});
   });
 

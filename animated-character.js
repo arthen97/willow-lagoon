@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export function createAnimatedCharacter(asset,actor){
  const root=new THREE.Group();root.name='RIGGED_CHARACTER';actor.add(root);const model=asset.scene;model.rotation.y=Math.PI;root.add(model);model.updateMatrixWorld(true);
  const box=new THREE.Box3().setFromObject(model),height=box.max.y-box.min.y,scale=1.82/height;model.scale.multiplyScalar(scale);model.position.y=-box.min.y*scale;
- let body,hips;model.traverse(o=>{if(o.isSkinnedMesh){body=o;o.frustumCulled=false;o.castShadow=o.receiveShadow=true;const mats=Array.isArray(o.material)?o.material:[o.material];for(const m of mats){m.roughness=Math.max(m.roughness,.72);m.envMapIntensity=.45;}}if(o.name==='Hips')hips=o;});
+ let body,hips;model.traverse(o=>{if(o.isSkinnedMesh){body=o;o.frustumCulled=false;o.castShadow=o.receiveShadow=true;const mats=Array.isArray(o.material)?o.material:[o.material];for(const m of mats){m.roughness=THREE.MathUtils.clamp(m.roughness,.38,.72);m.envMapIntensity=1.0;}}if(o.name==='Hips')hips=o;});
  const clips=asset.animations.map(a=>a.clone()),mixer=new THREE.AnimationMixer(model);
  for(const c of clips){const track=c.tracks.find(t=>t.name==='Hips.position');if(track){const v=track.values;const baseX=v[0],baseZ=v[2];for(let i=0;i<v.length;i+=3){v[i]-=baseX;v[i+2]=hips.position.z;}}}
  const actions={idle:mixer.clipAction(clips.find(c=>c.name==='Idle')),walk:mixer.clipAction(clips.find(c=>c.name==='Casual_Walk')),run:mixer.clipAction(clips.find(c=>c.name==='Run_02')),jump:mixer.clipAction(clips.find(c=>c.name==='Regular_Jump'))};

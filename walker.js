@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {createAnimatedCharacter} from './animated-character.js?v=20261016-cg';
+import {createAnimatedCharacter} from './animated-character.js?v=20261017-sunlit';
 import {oxygenDrain} from './survival.js';
 
 export function canStand(x,z,heightAt,obstacles,clearance=0) {
