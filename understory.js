@@ -15,7 +15,7 @@ export async function createUnderstory({scene,loader,groundHeight,valueNoise,win
  function pathDistance(x,z){let best=Infinity;for(const[a,b,c,d]of paths){const t=THREE.MathUtils.clamp(((x-a)*(c-a)+(z-b)*(d-b))/((c-a)**2+(d-b)**2),0,1);best=Math.min(best,Math.hypot(x-a-t*(c-a),z-b-t*(d-b)));}return best;}
  function allowed(x,z){
   const y=groundHeight(x,z);if(y<.10)return false;
-  if(Math.abs(x+18)<6.3&&z>32&&z<54)return false;
+  if(Math.abs(x+18)<4.5&&z>36.3&&z<51)return false;
   if(clearings.some(([a,b,r])=>Math.hypot(x-a,z-b)<r))return false;
   if(obstacles.some(o=>Math.hypot(x-o.x,z-o.z)<o.r+.18))return false;
   return true;
@@ -27,8 +27,8 @@ export async function createUnderstory({scene,loader,groundHeight,valueNoise,win
   const material=windMaterial(mesh.material.clone(),'grass');material.metalness=0;material.roughness=.92;material.envMapIntensity=.58;material.color.setHex(kind==='grass'?0xb9c89a:kind==='bush'?0x849b68:0x809c75);material.side=THREE.DoubleSide;material.normalScale?.set(.25,.25);
   return {geo,material,kind};
  }
- const variants=[];grasses.scene.traverse(o=>{if(o.isMesh&&/tall_[abc]|tiny_[abcdef]/.test(o.name))variants.push(part(o,/tall/.test(o.name)?.53:.24,'grass'));});
- const bushParts=[],fernParts=[];bushes.scene.traverse(o=>{if(o.isMesh)bushParts.push(part(o,.85,'bush'));});ferns.scene.traverse(o=>{if(o.isMesh)fernParts.push(part(o,.52,'fern'));});
+ const variants=[];grasses.scene.traverse(o=>{if(o.isMesh&&/tall_[abc]|tiny_[abcdef]/.test(o.name))variants.push(part(o,/tall/.test(o.name)?.36:.17,'grass'));});
+ const bushParts=[],fernParts=[];bushes.scene.traverse(o=>{if(o.isMesh)bushParts.push(part(o,.58,'bush'));});ferns.scene.traverse(o=>{if(o.isMesh)fernParts.push(part(o,.35,'fern'));});
  const patches=new Map(),dummy=new THREE.Object3D();let grassCount=0,shrubCount=0;
  function add(source,x,z,size,angle,tone){const key=Math.floor(x/24)+','+Math.floor(z/24)+','+source.kind+','+source.geo.uuid;if(!patches.has(key))patches.set(key,{source,list:[]});patches.get(key).list.push([x,groundHeight(x,z)-.015,z,size,angle,tone]);}
  // Jittered cells keep even area coverage; a low-frequency field creates broad meadow islands.
@@ -37,7 +37,7 @@ export async function createUnderstory({scene,loader,groundHeight,valueNoise,win
   const meadow=valueNoise(px*.065,11,pz*.065),fine=valueNoise(px*.23,7,pz*.23),trail=pathDistance(px,pz);
   const density=(.32+.62*THREE.MathUtils.smoothstep(meadow,.22,.68))*(trail<.85?.04:trail<1.45?.32:1);
   if(rand()>density)continue;
-  const source=variants[Math.floor(rand()*variants.length)],scale=.75+rand()*.7;
+  const source=variants[Math.floor(rand()*variants.length)],scale=.8+rand()*.4;
   add(source,px,pz,scale,rand()*Math.PI*2,.86+fine*.22);grassCount++;
   // Companion tufts make overlapping clumps with gaps between them.
   if(rand()<.65&&trail>1.3){const qx=px+(rand()-.5)*.45,qz=pz+(rand()-.5)*.45;if(allowed(qx,qz)){add(source,qx,qz,scale*.72,rand()*Math.PI*2,.93);grassCount++;}}
@@ -47,7 +47,7 @@ export async function createUnderstory({scene,loader,groundHeight,valueNoise,win
   const x=-54+rand()*108,z=-9+rand()*85;if(!allowed(x,z)||pathDistance(x,z)<1.8)continue;
   const habitat=valueNoise(x*.055,19,z*.055);if(habitat<.48)continue;
   const sources=i%3?bushParts:fernParts;
-  for(const source of sources)add(source,x,z,.65+rand()*.85,rand()*6.283,.84+rand()*.23);
+  for(const source of sources)add(source,x,z,.75+rand()*.5,rand()*6.283,.84+rand()*.23);
   shrubCount++;
  }
  for(const{source,list}of patches.values()){

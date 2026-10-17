@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import {SUN_DIRECTION,atmosphereTime,cloudGLSL} from './lighting-profile.js';
-import {createLightVolume} from './light-volume.js';
+import {SUN_DIRECTION,atmosphereTime,cloudGLSL} from './lighting-profile.js?v=20261017-stars-scale';
+import {createLightVolume} from './light-volume.js?v=20261017-stars-scale';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
 
 // Material-only treatment: preserve mesh geometry, bone skinning, wind hooks and animation.

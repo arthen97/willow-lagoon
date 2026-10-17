@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {createLivingShore} from './living-shore.js?v=20261017-ecology';
 import {asset,instance,materials} from './asset-library.js';
 export const CAMP={id:'camp',type:'camp',name:'零号营地 · 氧气回收站',x:-2.5,z:5.2};
-export const CAVE={x:-18,z:43,radius:4.6,length:17};
+export const CAVE={x:-18,z:45.2,radius:3.3,length:12.3,scale:.72,entryZ:37.3,backZ:49.5};
 export const FIELD_NODES=[
  {id:'wreck-tank',type:'salvage',x:6.1,z:6.8,name:'坠毁货舱 · 应急氧气罐'},
  {id:'lung-a',type:'lung',x:-16,z:23,name:'共生肺囊 · 露液换气'},
@@ -17,35 +17,35 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
  const group=new THREE.Group();group.name='FIELD_ECOLOGY_AND_CAMP';scene.add(group);
  function put(name,x,z,h,rotation=0,y=groundHeight(x,z),parent=group){const o=instance(sources[name],h,{rotation});o.name=name;o.position.set(x,y,z);parent.add(o);return o;}
  function label(text,sub,w=2.2){const c=document.createElement('canvas');c.width=768;c.height=256;const q=c.getContext('2d');q.fillStyle='#182627';q.fillRect(0,0,768,256);q.fillStyle='#aac9b5';q.fillRect(32,28,60,5);q.font='bold 47px sans-serif';q.fillText(text,32,112);q.font='25px sans-serif';q.fillStyle='#a4b2a4';q.fillText(sub,32,183);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;const o=new THREE.Mesh(new THREE.PlaneGeometry(w,w/3),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide}));o.rotation.y=Math.PI;group.add(o);return o;}
- const station=put('camp-station',CAMP.x,CAMP.z+1.8,2.8,Math.PI);station.name='MESHY_CAMP_RECHARGE_STATION';
+ const station=put('camp-station',CAMP.x,CAMP.z+1.8,2.05,Math.PI);station.name='MESHY_CAMP_RECHARGE_STATION';
  // Preserve the imported PBR texture; only its bright warm indicator pixels emit light.
  materials(station,m=>{m.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
  float warmIndicator=smoothstep(.34,.70,diffuseColor.r)*smoothstep(.12,.34,diffuseColor.r-diffuseColor.b);totalEmissiveRadiance+=vec3(2.8,1.05,.25)*warmIndicator;`);};m.customProgramCacheKey=()=> 'camp-warm-indicators-v1';});
- const rack=[];for(let i=0;i<3;i++)rack.push(put('oxygen-tank',CAMP.x-2.0+i*.45,CAMP.z+1.3,.95,Math.PI));
+ const rack=[];for(let i=0;i<3;i++)rack.push(put('oxygen-tank',CAMP.x-2.0+i*.45,CAMP.z+1.3,.72,Math.PI));
  put('collector',CAMP.x+2.0,CAMP.z+1,.6,Math.PI);
- const sign=label('零号营地','保持 E 插罐  /  H 补给  /  R 通信');sign.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.9,CAMP.z+1.5);
- const campLight=new THREE.PointLight(0xffd2a5,5,6,2);campLight.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.4,CAMP.z);group.add(campLight);
- walker.obstacles.push({x:CAMP.x,z:CAMP.z+2,r:1.6,h:2.8},{x:CAMP.x-1.6,z:CAMP.z+1.3,r:.65,h:.95});
+ const sign=label('零号营地','保持 E 插罐  /  H 补给  /  R 通信');sign.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+2.22,CAMP.z+1.5);
+ const campLight=new THREE.PointLight(0xffd2a5,5,6,2);campLight.position.set(CAMP.x,groundHeight(CAMP.x,CAMP.z)+1.9,CAMP.z);group.add(campLight);
+ walker.obstacles.push({x:CAMP.x,z:CAMP.z+2,r:1.2,h:2.05},{x:CAMP.x-1.6,z:CAMP.z+1.3,r:.5,h:.72});
  // Rigid imported equipment follows the existing attachment bones.
  const carry=new THREE.Group();carry.name='CARRIED_OXYGEN_CYLINDERS';walker.actor.add(carry);
  for(const x of[-.25,.25]){const t=instance(sources['oxygen-tank'],.61);t.position.set(x,.78,.33);carry.add(t);}walker.animation.mount(carry,'Spine');
  const pump=instance(sources.collector,.38);pump.position.set(.38,.68,-.15);walker.actor.add(pump);pump.visible=false;walker.animation.mount(pump,'RightHand');
  const nodes=FIELD_NODES.map(n=>({...n}));world.nodes.push({...CAMP,object:station},...nodes);const organs=[];
- for(const n of nodes){let o;if(n.type==='lung'){o=put('lung-plant',n.x,n.z,2.25,n.x*.13);organs.push({id:n.id,mesh:o,base:o.scale.clone(),seed:n.x});}
-  else if(n.type==='salvage')o=put('oxygen-tank',n.x,n.z,.95,.45);
+ for(const n of nodes){let o;if(n.type==='lung'){o=put('lung-plant',n.x,n.z,1.15,n.x*.13);organs.push({id:n.id,mesh:o,base:o.scale.clone(),seed:n.x});}
+  else if(n.type==='salvage')o=put('oxygen-tank',n.x,n.z,.72,.45);
   else if(n.type==='siphon'){o=put('collector',n.x,n.z,.7);o.visible=false;}
   else{o=instance(rocks,.65);o.position.set(n.x,groundHeight(n.x,n.z)-.12,n.z);group.add(o);const l=new THREE.PointLight(0x8bbfa7,2,2);l.position.set(n.x,groundHeight(n.x,n.z)+.2,n.z);group.add(l);}
   n.object=o;
  }
  // Downloaded CC0 chamber: original UVs, stone albedo and normal map are embedded.
- const cavern=sources['cave-chamber'].clone(true);cavern.name='ENTERABLE_CAVE';cavern.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)-.10,CAVE.z);group.add(cavern);materials(cavern,m=>{m.side=THREE.DoubleSide;m.envMapIntensity=.45;m.roughness=.88;});cavern.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});cavern.updateMatrixWorld(true);
- // Keep the original collision surface while the repaired shell changes only rendering.
- const collisionCave=(await asset(loader,'cave-chamber')).clone(true);collisionCave.position.copy(cavern.position);materials(collisionCave,m=>{m.side=THREE.DoubleSide;});collisionCave.updateMatrixWorld(true);
+ const cavern=sources['cave-chamber'].clone(true);cavern.name='ENTERABLE_CAVE';cavern.scale.setScalar(CAVE.scale);cavern.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)-.10,CAVE.z);group.add(cavern);materials(cavern,m=>{m.side=THREE.DoubleSide;m.envMapIntensity=.45;m.roughness=.88;});cavern.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});cavern.updateMatrixWorld(true);
+ // Apply the same metre-scale transform to the visual shell and collision surface.
+ const collisionCave=(await asset(loader,'cave-chamber')).clone(true);collisionCave.position.copy(cavern.position);collisionCave.scale.copy(cavern.scale);materials(collisionCave,m=>{m.side=THREE.DoubleSide;});collisionCave.updateMatrixWorld(true);
  // Derive side blockers from the imported cave wall at body height.
- const ray=new THREE.Raycaster();for(let z=35;z<=51;z+=.65)for(const side of[-1,1]){ray.set(new THREE.Vector3(CAVE.x,cavern.position.y+1.1,z),new THREE.Vector3(side,0,0));const hit=ray.intersectObject(collisionCave,true)[0];if(hit&&hit.distance<8)walker.obstacles.push({x:hit.point.x,z,r:.36,h:6});}
- const caveSign=label('蓝脉洞窟','避风  /  放置抽气器，再回来收罐',2.6);caveSign.position.set(CAVE.x-3.6,groundHeight(CAVE.x,CAVE.z)+1.5,33.6);caveSign.rotation.y=Math.PI+.3;
- for(let k=0;k<3;k++){const l=new THREE.PointLight(0x9acbc3,2.2,6,2);l.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)+1.8,38+k*4);group.add(l);}
- for(let k=0;k<8;k++){const colony=put('fan-plant',CAVE.x+Math.sin(k*2.9)*3.2,37+k*1.6,.3+(k%3)*.12,k);materials(colony,m=>{m.emissive.setHex(0x57d7ca);m.emissiveMap=m.map;m.emissiveIntensity=1.15;});}
+ const ray=new THREE.Raycaster();for(let z=CAVE.entryZ;z<=CAVE.backZ;z+=.45)for(const side of[-1,1]){ray.set(new THREE.Vector3(CAVE.x,cavern.position.y+1.1,z),new THREE.Vector3(side,0,0));const hit=ray.intersectObject(collisionCave,true)[0];if(hit&&hit.distance<5)walker.obstacles.push({x:hit.point.x,z,r:.28,h:4.3});}
+ const caveSign=label('蓝脉洞窟','避风  /  放置抽气器，再回来收罐',1.6);caveSign.position.set(CAVE.x-2.8,groundHeight(CAVE.x,CAVE.z)+1.25,CAVE.entryZ-1.1);caveSign.rotation.y=Math.PI+.3;
+ for(let k=0;k<3;k++){const l=new THREE.PointLight(0x9acbc3,2.2,6,2);l.position.set(CAVE.x,groundHeight(CAVE.x,CAVE.z)+1.8,39+k*3.5);group.add(l);}
+ for(let k=0;k<8;k++){const colony=put('fan-plant',CAVE.x+Math.sin(k*2.9)*2.15,39+k*1.25,.18+(k%3)*.08,k);materials(colony,m=>{m.emissive.setHex(0x57d7ca);m.emissiveMap=m.map;m.emissiveIntensity=1.15;});}
  // The original ISLAND mesh is one continuous landform across the lake.
  // Do not add isolated scan slabs offshore or beyond the walkable ground edge.
  // Two modest, buried outcrops tie the cave walls into the existing terrain.
@@ -60,11 +60,11 @@ export async function createFieldWorld({scene,loader,walker,world,groundHeight})
   o.name='CC0_EMBEDDED_CAVE_ROCK';o.updateMatrixWorld(true);
   materials(o,m=>{m.roughness=Math.max(.88,m.roughness);m.envMapIntensity=.38;});
  }
- caveOutcrop(-26,45,4.2,1.47,25);
- caveOutcrop(-10,49,3.1,1.30,20);
- const colonies=[[-12,10,2.2],[-22,18,3.2],[8,21,2.6],[18,24,3.5],[-26,29,4],[23,42,4.8],[-7,44,2.8],[7,48,5],[20,15,2.4],[-29,38,3.4]];
- for(const[x,z,h]of colonies){put('fan-plant',x,z,h,x*.6);walker.obstacles.push({x,z,r:.35,h});}
+ caveOutcrop(-23.8,44,3.4,1.47,10);
+ caveOutcrop(-12.5,47.8,2.7,1.30,8);
+ const colonies=[[-12,10,.65],[-22,18,.95],[8,21,.8],[18,24,1.1],[-26,29,1.2],[23,42,1.45],[-7,44,.85],[7,48,1.55],[20,15,.7],[-29,38,1.05]];
+ for(const[x,z,h]of colonies){put('fan-plant',x,z,h,x*.6);walker.obstacles.push({x,z,r:Math.min(.3,h*.18),h});}
  const trail=label('营地 ←    洞窟 ↑','先观察，再取用。别把肺交给广告。',2.4);trail.position.set(-8,groundHeight(-8,24)+1.2,24);
  const shore=await createLivingShore({scene,loader,world,walker,groundHeight});let lastTime=0;
- return {group,camp:CAMP,cave:CAVE,isSheltered(p){return Math.abs(p.x-CAVE.x)<4&&Math.abs(p.z-CAVE.z)<8.3||Math.hypot(p.x-CAMP.x,p.z-CAMP.z)<3.6;},update(time,game,progress){const dt=Math.min(.12,Math.max(0,time-lastTime));lastTime=time;shore.update(time,game,dt);organs.forEach(o=>{const resting=(progress?.cooldowns.get(o.id)||0)>time;const breathe=game.fed?.[o.id] ? .08 : .025;o.mesh.scale.copy(o.base).multiplyScalar((resting ? .76 : 1)+Math.sin(time*1.3+o.seed)*breathe);});pump.visible=!!game.harvesting;for(let i=0;i<rack.length;i++)rack[i].visible=game.delivered>0&&i<Math.ceil(game.reserve/40);if(game.insertedAt!==undefined){const t=Math.min(1,(time-game.insertedAt)/1.2);rack[0].position.y=groundHeight(CAMP.x,CAMP.z)+.3*(1-t);}for(const n of nodes)if(n.type==='siphon')n.object.visible=!!game.deployments[n.id];else if(n.type==='salvage')n.object.visible=!game.salvaged?.has?.(n.id);}};
+ return {group,camp:CAMP,cave:CAVE,isSheltered(p){return Math.abs(p.x-CAVE.x)<CAVE.radius&&p.z>CAVE.entryZ+.5&&p.z<CAVE.backZ-.3||Math.hypot(p.x-CAMP.x,p.z-CAMP.z)<3.6;},update(time,game,progress){const dt=Math.min(.12,Math.max(0,time-lastTime));lastTime=time;shore.update(time,game,dt);organs.forEach(o=>{const resting=(progress?.cooldowns.get(o.id)||0)>time;const breathe=game.fed?.[o.id] ? .08 : .025;o.mesh.scale.copy(o.base).multiplyScalar((resting ? .76 : 1)+Math.sin(time*1.3+o.seed)*breathe);});pump.visible=!!game.harvesting;for(let i=0;i<rack.length;i++)rack[i].visible=game.delivered>0&&i<Math.ceil(game.reserve/40);if(game.insertedAt!==undefined){const t=Math.min(1,(time-game.insertedAt)/1.2);rack[0].position.y=groundHeight(CAMP.x,CAMP.z)+.3*(1-t);}for(const n of nodes)if(n.type==='siphon')n.object.visible=!!game.deployments[n.id];else if(n.type==='salvage')n.object.visible=!game.salvaged?.has?.(n.id);}};
 }

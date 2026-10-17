@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {createUnderstory} from './understory.js';
+import {createUnderstory} from './understory.js?v=20261017-stars-scale';
 import {closeTerrainBoundary} from './terrain-seams.js';
 
 export async function enrichEnvironment(ctx) {

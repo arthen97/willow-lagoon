@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {FullScreenQuad} from 'three/addons/postprocessing/Pass.js';
-import {SUN_DIRECTION,atmosphereTime,cloudGLSL} from './lighting-profile.js';
+import {SUN_DIRECTION,atmosphereTime,cloudGLSL} from './lighting-profile.js?v=20261017-stars-scale';
 export function createLightVolume(){
  const target=new THREE.WebGLRenderTarget(1,1,{type:THREE.HalfFloatType,minFilter:THREE.NearestFilter,magFilter:THREE.NearestFilter,depthBuffer:false});
  const uniforms={tDepth:{value:null},sunShadow:{value:null},sunMatrix:{value:new THREE.Matrix4()},cameraWorld:{value:new THREE.Matrix4()},inverseProjection:{value:new THREE.Matrix4()},sunDirection:{value:SUN_DIRECTION},sunRadiance:{value:new THREE.Color()},uCloudTime:{value:0},volumeStrength:{value:.6},volumeSteps:{value:matchMedia('(pointer: coarse)').matches?10:16},cameraNear:{value:.08},cameraFar:{value:6500}};

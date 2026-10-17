@@ -18,7 +18,7 @@ export async function createStoryWorld({scene,loader,groundHeight,walker}){
   materials(wrap,m=>{m.metalness=0;m.roughness=.91;});
   if(collision){const size=new THREE.Box3().setFromObject(wrap).getSize(new THREE.Vector3());walker.obstacles.push({x,z,r:Math.min(1.25,Math.max(size.x,size.z)*.36),h:height});}return wrap;
  }
- function plinth(x,z){return place(assets['altar-stone'],x,z,.84,0);}
+ function plinth(x,z){return place(assets['altar-stone'],x,z,.78,0);}
  function plaque(node,pedestal){
   const box=new THREE.Box3().setFromObject(pedestal),center=box.getCenter(new THREE.Vector3());
   const c=document.createElement('canvas');c.width=512;c.height=192;const ctx=c.getContext('2d');ctx.fillStyle='#202c26';ctx.fillRect(0,0,512,192);ctx.fillStyle='#d8c69d';ctx.font='16px sans-serif';ctx.fillText('EARTH ARCHIVE / 2486',25,39);ctx.font='bold 25px sans-serif';ctx.fillText(node.name,25,88);ctx.fillStyle='#a9b4a2';ctx.font='17px sans-serif';ctx.fillText(node.type==='relay'?'O₂  BIO-REACTOR':'地球记忆馆 · 未来虚构档案',25,137);
@@ -47,7 +47,7 @@ export async function createStoryWorld({scene,loader,groundHeight,walker}){
    const pedestal=plinth(x,z);plaque(node,pedestal);
    try{
     const portrait=(await loader.loadAsync(`./assets/story/portraits/${node.portrait}.glb`)).scene;
-    const bust=place(portrait,x,z,1.05,Math.PI,null,false);bust.position.y=new THREE.Box3().setFromObject(pedestal).max.y-.015;node.object=bust;assetStatus[node.id]='loaded';
+    const bust=place(portrait,x,z,.64,Math.PI,null,false);bust.position.y=new THREE.Box3().setFromObject(pedestal).max.y-.015;node.object=bust;assetStatus[node.id]='loaded';
    }catch{node.object=pedestal;assetStatus[node.id]='unavailable';}
   }else{
    node.object=assets['altar-stone']?place(assets['altar-stone'],x,z,1.1,0,null):plinth(x,z);plaque(node,node.object);

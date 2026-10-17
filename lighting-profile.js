@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 // Shared direction: sky disc, direct lighting, cloud shadows, water and scattering.
 export const SUN_DIRECTION=new THREE.Vector3(-.58,.66,.48).normalize();
-export const SUN_COLOR=0xffe5b6;
+export const SUN_COLOR=0xcddff2;
 export const atmosphereTime={value:0};
 export const cloudGLSL=`
 float cloudHash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}

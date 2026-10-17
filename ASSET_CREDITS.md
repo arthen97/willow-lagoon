@@ -126,3 +126,9 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - Archive sites now use the original Kenney Graveyard Kit CC0 `stone-wall-damaged`, `column-large`, `altar-stone`, and `debris` meshes in `assets/story/cc0/`, with their supplied color atlas. Cave cliff sheets are no longer used as masonry. License: `assets/story/cc0/LICENSE-Kenney.txt`.
 - Nine existing Poly Haven grass variants are used across the island; Kenney Nature Kit CC0 `plant_bushDetailed` and `grass_leafsLarge` provide shrub and broadleaf cover. License: `assets/story/cc0/LICENSE-Nature-Kenney.txt`. Placement, base alignment, nonmetallic foliage materials, scale and color are adapted by this project.
 - `assets/stylized/ground-understory.jpg`: AI-generated seamless painterly albedo, created with the built-in image generation tool on 2026-10-17. Quiet sage moss and grey-brown soil with broad low-contrast patches; no pebbles, blade shapes, outlines, baked shadows or pixel stippling. Replaces the busy outlined ground albedo. Original PBR normal/roughness inputs remain at reduced strength.
+
+## 2026-10-17 starfield and metre-scale pass
+
+- `assets/starfield-4k.exr`: **Night Sky HDRI 008**, ambientCG, CC0 1.0. Original 4096 × 2048 EXR from the official 4K download; no painted or generated stars. Source: https://ambientcg.com/view?id=NightSkyHDRI008 . Used for the visible Milky Way sky and PMREM environment reflections.
+- Imported cave is uniformly scaled to 72% (about 7.7 m wide × 4.5 m tall × 12.3 m deep); the original collision source receives the same transform. The collect point stays at its existing location inside the resized cave.
+- Reference character height: 1.82 m. Main grass approximately 0.14–0.43 m; bushes 0.44–0.73 m; special field plants 0.65–1.55 m; camp station 2.05 m; archive pedestal plus portrait 1.42 m. Grass companion tufts can be shorter. Character rig, locomotion and oxygen economy are unchanged.
