@@ -42,9 +42,8 @@ export function stylizeMaterials(scene){
     const mapChunk=THREE.ShaderChunk.map_fragment.replace('texture2D( map, vMapUv )',`texture2D( map, vMapUv, ${foliage?'0.0':'.65'} )`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',mapChunk+`
      float paintLuma=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
-     float paintValue=mix(paintLuma,(floor(paintLuma*7.0)+.5)/7.0,.52);
-     diffuseColor.rgb*=clamp(paintValue/max(paintLuma,.035),.78,1.22);
-     diffuseColor.rgb=mix(vec3(paintValue),diffuseColor.rgb,1.08);
+     // Keep painted albedo continuous; cel bands belong to illumination, not texture pixels.
+     diffuseColor.rgb=mix(vec3(paintLuma),diffuseColor.rgb,1.04);
     `);
     // Paint diffuse BEFORE transmission, specular, sheen and clearcoat are composed by Three.
     // Scaling the actual light keeps cast shadows and metallic energy conservation intact.
@@ -57,7 +56,7 @@ export function stylizeMaterials(scene){
      totalDiffuse*=inkRatio*inkShadow;
     `);
    };
-   material.customProgramCacheKey=()=>baseKey+'|painted-sun-pbr-v4|'+foliage;
+   material.customProgramCacheKey=()=>baseKey+'|painted-sun-pbr-v5|'+foliage;
    material.needsUpdate=true;
   }
  });

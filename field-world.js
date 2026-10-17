@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {createLivingShore} from './living-shore.js?v=20261017-arc';
+import {createLivingShore} from './living-shore.js?v=20261017-ecology';
 import {asset,instance,materials} from './asset-library.js';
 export const CAMP={id:'camp',type:'camp',name:'零号营地 · 氧气回收站',x:-2.5,z:5.2};
 export const CAVE={x:-18,z:43,radius:4.6,length:17};

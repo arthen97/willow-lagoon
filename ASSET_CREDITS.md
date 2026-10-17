@@ -120,3 +120,9 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - `coastal-cliff-sealed.glb`: derivative of the existing Poly Haven Coastal Cliff 01 (CC0). Welded vertices, 15 small holes filled, smooth normals, closed scan rims, tapered end cuts. Original textures and UVs retained.
 - `cave-chamber-sealed.glb`: derivative of the existing Ron Kapaun / 3TD Studios Cave Pack Pro chamber (CC0). Welded vertices, smoothed shading, 9 cm shell with rim faces; intended entrances preserved. Original chamber remains the collision source.
 - Preparation script: `tools/seal_world_assets.py`. Exact preparation counts in `docs/design/2026-10-17-asset-sealing.json`.
+
+## 2026-10-17 understory and masonry correction
+
+- Archive sites now use the original Kenney Graveyard Kit CC0 `stone-wall-damaged`, `column-large`, `altar-stone`, and `debris` meshes in `assets/story/cc0/`, with their supplied color atlas. Cave cliff sheets are no longer used as masonry. License: `assets/story/cc0/LICENSE-Kenney.txt`.
+- Nine existing Poly Haven grass variants are used across the island; Kenney Nature Kit CC0 `plant_bushDetailed` and `grass_leafsLarge` provide shrub and broadleaf cover. License: `assets/story/cc0/LICENSE-Nature-Kenney.txt`. Placement, base alignment, nonmetallic foliage materials, scale and color are adapted by this project.
+- `assets/stylized/ground-understory.jpg`: AI-generated seamless painterly albedo, created with the built-in image generation tool on 2026-10-17. Quiet sage moss and grey-brown soil with broad low-contrast patches; no pebbles, blade shapes, outlines, baked shadows or pixel stippling. Replaces the busy outlined ground albedo. Original PBR normal/roughness inputs remain at reduced strength.
