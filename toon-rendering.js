@@ -22,10 +22,10 @@ export function stylizeMaterials(scene){
     baseCompile.call(this,shader,renderer);
     shader.uniforms.uCloudTime=atmosphereTime;shader.uniforms.uSunDirection={value:SUN_DIRECTION};
     shader.fragmentShader='uniform float uCloudTime;uniform vec3 uSunDirection;\n'+cloudGLSL+'\n'+shader.fragmentShader;
-    // Modulate the directional light before the BRDF, including its specular response.
+    // Three unrolls this light loop into one scope: never declare locals in the injected snippet.
+    // Modulate directional light before the BRDF, including its specular response.
     const lights=THREE.ShaderChunk.lights_fragment_begin.replace('getDirectionalLightInfo( directionalLight, directLight );',`getDirectionalLightInfo( directionalLight, directLight );
-     vec3 cloudWorld=vCloudWorld;
-     directLight.color*=cloudTransmission(cloudWorld,uSunDirection,uCloudTime);`);
+     directLight.color*=cloudTransmission(vCloudWorld,uSunDirection,uCloudTime);`);
     shader.vertexShader='varying vec3 vCloudWorld;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <worldpos_vertex>',`#include <worldpos_vertex>
       vec4 cloudPosition=vec4(transformed,1.);
@@ -57,7 +57,7 @@ export function stylizeMaterials(scene){
      totalDiffuse*=inkRatio*inkShadow;
     `);
    };
-   material.customProgramCacheKey=()=>baseKey+'|painted-sun-pbr-v3|'+foliage;
+   material.customProgramCacheKey=()=>baseKey+'|painted-sun-pbr-v4|'+foliage;
    material.needsUpdate=true;
   }
  });

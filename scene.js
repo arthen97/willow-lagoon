@@ -1,5 +1,5 @@
 import {SUN_DIRECTION,SUN_COLOR} from './lighting-profile.js';
-import {stylizeMaterials,addInkPass} from './toon-rendering.js?v=20261017-sunlit';
+import {stylizeMaterials,addInkPass} from './toon-rendering.js?v=20261017-shaderfix';
 import * as THREE from 'three';
 import {createFieldWorld} from './field-world.js?v=20261017-sunlit';
 import {createCinematic} from './cinematic.js?v=20261017-sunlit';
