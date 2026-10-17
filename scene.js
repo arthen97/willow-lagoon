@@ -2,14 +2,14 @@ import {SUN_DIRECTION,SUN_COLOR} from './lighting-profile.js?v=20261017-stars-sc
 import {stylizeMaterials,addInkPass} from './toon-rendering.js?v=20261017-stars-scale';
 import * as THREE from 'three';
 import {createFieldWorld} from './field-world.js?v=20261017-stars-scale';
-import {createCinematic} from './cinematic.js?v=20261017-stars-scale';
+import {createCinematic} from './cinematic.js?v=20261017-movement-sky';
 import {expandedHeight,expandGround} from './terrain.js?v=20261015-1';
 import {createFishSchools} from './fish.js?v=20261016-camp';
 import {createAmbientSound} from './audio.js?v=20261016-arthen';
 import {enrichEnvironment} from './environment.js?v=20261017-stars-scale';
-import {createWalker} from './walker.js?v=20261017-sunlit';
+import {createWalker} from './walker.js?v=20261017-movement-sky';
 import {createStoryWorld} from './story-world.js?v=20261017-stars-scale';
-import {createGameUI} from './game-ui.js?v=20261017-fieldkit';
+import {createGameUI} from './game-ui.js?v=20261017-movement-sky';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {DRACOLoader} from 'three/addons/loaders/DRACOLoader.js';
@@ -94,7 +94,7 @@ function updateBirds(time){
 }
 
 function createMist(){const geo=new THREE.PlaneGeometry(1,1),mat=new THREE.ShaderMaterial({uniforms:{uTime:timeU},transparent:true,depthWrite:false,side:THREE.DoubleSide,vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:`uniform float uTime;varying vec2 vUv;${noiseGLSL}void main(){float n=fbm(vec2(vUv.x*8.-uTime*.012,vUv.y*3.));float edge=smoothstep(0.,.25,vUv.x)*smoothstep(1.,.75,vUv.x)*pow(sin(vUv.y*3.14159),2.);gl_FragColor=vec4(.55,.62,.65,n*edge*.12);}`});for(let i=0;i<4;i++){const p=new THREE.Mesh(geo,mat);p.position.set(160+i*25,30+i*28,-1000-i*95);p.scale.set(1100-i*60,80,1);scene.add(p);}}
-function applyLook(){const flat=state.compare,day=state.preset==='day';key.intensity=flat?0:state.key;dawnLight.color.setHex(0xafcadb);dawnLight.intensity=flat?.10:.06;edgeLight.intensity=0;frontfill.intensity=0;skyfill.intensity=flat?1.1:.30;scene.environmentIntensity=flat?.9:.72;scene.backgroundIntensity=flat?.82:day?.74:.35;renderer.toneMappingExposure=state.exposure;grade.uniforms.strength.value=flat?0:.28;bloom.strength=flat?.02:state.bloom;bloom.enabled=state.bloom>0;ink.uniforms.inkStrength.value=state.ink;scene.fog.color.set(flat?0x9da6aa:0x22333e);weatherU.value=state.weather;if(flame)flame.material.uniforms.uFire.value=state.fire;}
+function applyLook(){const flat=state.compare,day=state.preset==='day';key.intensity=flat?0:state.key;dawnLight.color.setHex(0xafcadb);dawnLight.intensity=flat?.10:.06;edgeLight.intensity=0;frontfill.intensity=0;skyfill.intensity=flat?1.1:.30;scene.environmentIntensity=flat?.9:.72;scene.backgroundIntensity=flat?.82:.78;renderer.toneMappingExposure=state.exposure;grade.uniforms.strength.value=flat?0:.28;bloom.strength=flat?.02:state.bloom;bloom.enabled=state.bloom>0;ink.uniforms.inkStrength.value=state.ink;scene.fog.color.set(flat?0x9da6aa:0x22333e);weatherU.value=state.weather;if(flame)flame.material.uniforms.uFire.value=state.fire;}
 const screenMotion=new THREE.Vector2(),motionRight=new THREE.Vector3(),motionUp=new THREE.Vector3();let blurStrength=0,last=performance.now(),fpsTime=0,frameCount=0;
 function animate(now=performance.now()){
   requestAnimationFrame(animate);const elapsed=(now-last)/1000,dt=Math.min(elapsed,.12);last=now;if(document.body.classList.contains('prologue-playing'))return;if(!state.paused)state.time+=dt;timeU.value=state.time;

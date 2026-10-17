@@ -132,3 +132,8 @@ Willow geometry was remodeled procedurally in Blender for this project; it is no
 - `assets/starfield-4k.exr`: **Night Sky HDRI 008**, ambientCG, CC0 1.0. Original 4096 × 2048 EXR from the official 4K download; no painted or generated stars. Source: https://ambientcg.com/view?id=NightSkyHDRI008 . Used for the visible Milky Way sky and PMREM environment reflections.
 - Imported cave is uniformly scaled to 72% (about 7.7 m wide × 4.5 m tall × 12.3 m deep); the original collision source receives the same transform. The collect point stays at its existing location inside the resized cave.
 - Reference character height: 1.82 m. Main grass approximately 0.14–0.43 m; bushes 0.44–0.73 m; special field plants 0.65–1.55 m; camp station 2.05 m; archive pedestal plus portrait 1.42 m. Grass companion tufts can be shorter. Character rig, locomotion and oxygen economy are unchanged.
+
+## 2026-10-17 movement recovery and native sky mapping
+
+- The same ambientCG EXR is now displayed through Three.js native 360 × 180 degree cubemap background, with no enclosing sky mesh, custom UV projection, generated moon disc or extra 1.5× sky radiance. Background and original EXR PMREM share rotation. Cubemap conversion is limited to 1024 pixels per face.
+- Saved player coordinates and respawn positions are resolved onto nearby traversable ground against the current collision world; blocked grounded characters can recover without resetting oxygen or story progress. Keyboard focus returns to the game canvas on start/resume.

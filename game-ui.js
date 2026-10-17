@@ -23,6 +23,7 @@ function buildTerrainMap(heightAt){
 
 export function createGameUI({camera,controls,renderer,walker,state,groundHeight,ambientSound,world}){
   const stage=renderer.domElement,terrain=buildTerrainMap(groundHeight);
+  stage.tabIndex=0;stage.setAttribute('aria-label','游戏画面 · WASD 移动，空格跳跃');
   const pauseMenu=$('#pause-menu'),mapDialog=$('#map-dialog'),credits=$('#credits-dialog');
   const mini=$('#minimap'),full=$('#full-map'),compass=$('#compass-canvas');
   const direction=new THREE.Vector3(),offset=new THREE.Vector3(),sphere=new THREE.Spherical(),projected=new THREE.Vector3();
@@ -53,7 +54,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
   }
   function resume(lock=true){
     if(!started||document.querySelector('dialog[data-block-resume="true"][open]'))return;closeMenus();state.paused=false;controls.enabled=true;walker.clearInput();
-    $('#pause').setAttribute('aria-expanded','false');if(lock)lockCamera();
+    $('#pause').setAttribute('aria-expanded','false');stage.focus({preventScroll:true});if(lock)lockCamera();
   }
   function pause(dialog=pauseMenu){
     if(!started)return;expedition.stopVoice();state.paused=true;walker.clearInput();controls.enabled=false;
@@ -65,7 +66,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
   function start(){
     if(!ready||started)return;started=true;state.gameStarted=true;state.paused=false;
     walker.enable(true);controls.maxDistance=8;controls.enableDamping=false;
-    $('#game-hud').hidden=false;document.body.classList.add('game-started');$('#loader').setAttribute('aria-hidden','true');$('#loader').inert=true;
+    $('#game-hud').hidden=false;document.body.classList.add('game-started');$('#loader').setAttribute('aria-hidden','true');$('#loader').inert=true;stage.focus({preventScroll:true});
     window.dispatchEvent(new Event('expedition-started'));void toggleSound();lockCamera();expedition.start();updateHud();
     hintTimer=setTimeout(()=>document.body.classList.add('hint-faded'),14000);
   }
@@ -100,7 +101,7 @@ export function createGameUI({camera,controls,renderer,walker,state,groundHeight
     if(wasLocked&&!locked&&started&&!state.paused)pause();wasLocked=locked;
   });
   document.addEventListener('pointerlockerror',()=>document.body.classList.remove('hint-faded'));
-  stage.addEventListener('click',()=>{if(started&&!state.paused&&!matchMedia('(pointer: coarse)').matches)lockCamera();});
+  stage.addEventListener('click',()=>{stage.focus({preventScroll:true});if(started&&!state.paused&&!matchMedia('(pointer: coarse)').matches)lockCamera();});
   document.addEventListener('mousemove',e=>{
     if(document.pointerLockElement!==stage||state.paused)return;
     sphere.setFromVector3(offset.copy(camera.position).sub(controls.target));

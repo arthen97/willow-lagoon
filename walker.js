@@ -3,9 +3,24 @@ import {createAnimatedCharacter} from './animated-character.js?v=20261017-sunlit
 import {oxygenDrain} from './survival.js';
 
 export function canStand(x,z,heightAt,obstacles,clearance=0) {
-  if(x<-58||x>58||z<-22||z>78)return false;
+  if(!Number.isFinite(x)||!Number.isFinite(z)||x<-58||x>58||z<-22||z>78)return false;
   const center=heightAt(x,z);for(const [dx,dz] of [[0,0],[.18,0],[-.18,0],[0,.18],[0,-.18]]){const h=heightAt(x+dx,z+dz);if(h<.055||Math.abs(h-center)>.17)return false;}
   return !obstacles.some(o=>clearance<(o.h??2.2)+.08&&Math.hypot(x-o.x,z-o.z)<o.r+.25);
+}
+
+// Saves can predate a scenery/collision update. Resolve them against the current world.
+export function safeGroundPosition(point,heightAt,obstacles){
+ const hasExit=(x,z)=>canStand(x,z,heightAt,obstacles)&&[[.45,0],[-.45,0],[0,.45],[0,-.45]].some(([dx,dz])=>canStand(x+dx,z+dz,heightAt,obstacles));
+ const valid=Number.isFinite(point?.x)&&Number.isFinite(point?.z);
+ const origins=valid?[point,{x:-2.35,z:2.8}]:[{x:-2.35,z:2.8}];
+ for(const origin of origins){
+  if(hasExit(origin.x,origin.z))return {x:origin.x,z:origin.z};
+  for(let r=.25;r<=12;r+=.25){const count=Math.max(16,Math.ceil(2*Math.PI*r/.35));for(let k=0;k<count;k++){
+   const a=k/count*Math.PI*2,x=origin.x+Math.cos(a)*r,z=origin.z+Math.sin(a)*r;
+   if(hasExit(x,z))return {x,z};
+  }}
+ }
+ return null;
 }
 
 export function findPath(start,end,heightAt,obstacles) {
@@ -66,10 +81,17 @@ export function createWalker({scene,model,camera,controls,renderer,ground,ground
     lookPosition.copy(lookOffset).applyAxisAngle(worldUp,actor.rotation.y).add(actor.position);
     camera.position.copy(cameraPosition);controls.target.copy(lookPosition);camera.lookAt(lookPosition);
   }
+  function recoverPosition(){
+    if(canStand(actor.position.x,actor.position.z,groundHeight,obstacles))return false;
+    const point=safeGroundPosition(actor.position,groundHeight,obstacles);if(!point)return false;
+    const delta=new THREE.Vector3(point.x-actor.position.x,groundHeight(point.x,point.z)+.012-actor.position.y,point.z-actor.position.z);
+    actor.position.add(delta);camera.position.add(delta);controls.target.add(delta);cameraFollowY=actor.position.y;
+    velocity.set(0,0,0);path=[];reason='已移至附近可通行地面';return true;
+  }
   function enable(value){
     if(value===enabled)return;enabled=value;
     document.body.classList.toggle('walking',value);clearInput();updateHud();
-    if(value){savedView={position:camera.position.clone(),target:controls.target.clone(),fov:camera.fov,enabled:controls.enabled,enableDamping:controls.enableDamping,enablePan:controls.enablePan,minDistance:controls.minDistance};camera.fov=innerWidth/innerHeight<1?65:49;camera.updateProjectionMatrix();controls.enabled=true;controls.enablePan=false;controls.enableDamping=false;controls.minDistance=2.8;placeChaseCamera();controls.update();controls.enableDamping=true;}
+    if(value){recoverPosition();savedView={position:camera.position.clone(),target:controls.target.clone(),fov:camera.fov,enabled:controls.enabled,enableDamping:controls.enableDamping,enablePan:controls.enablePan,minDistance:controls.minDistance};camera.fov=innerWidth/innerHeight<1?65:49;camera.updateProjectionMatrix();controls.enabled=true;controls.enablePan=false;controls.enableDamping=false;controls.minDistance=2.8;placeChaseCamera();controls.update();controls.enableDamping=true;}
     else{if(savedView){camera.position.copy(savedView.position);controls.target.copy(savedView.target);camera.fov=savedView.fov;camera.updateProjectionMatrix();camera.lookAt(controls.target);controls.enabled=savedView.enabled;controls.enableDamping=savedView.enableDamping;controls.enablePan=savedView.enablePan;controls.minDistance=savedView.minDistance;savedView=null;}controls.update();}
   }
   function goTo(point){
@@ -89,12 +111,13 @@ export function createWalker({scene,model,camera,controls,renderer,ground,ground
   function refillOxygen(){addOxygen(100);}
   function respawn(point={x:-2.35,z:2.8},reserve=65){
     clearInput();jumpHeight=0;jumpVelocity=0;jumpStage='ground';jumpClock=0;const before=actor.position.clone();
-    actor.position.set(point.x,groundHeight(point.x,point.z)+.012,point.z);
+    const safe=safeGroundPosition(point,groundHeight,obstacles);if(!safe){reason='附近没有安全落点';return;}
+    actor.position.set(safe.x,groundHeight(safe.x,safe.z)+.012,safe.z);
     const delta=actor.position.clone().sub(before);camera.position.add(delta);controls.target.add(delta);cameraFollowY=actor.position.y;stamina=100;exhausted=false;oxygen=reserve;updateHud();
   }
   const keyMap={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right'};
   addEventListener('keydown',e=>{
-    if(!state.gameStarted||state.paused||e.target.closest?.('input,textarea,select,dialog'))return;
+    if(!state.gameStarted||state.paused||e.target.closest?.('input,textarea,select,dialog[open]'))return;
     if(e.code==='Space'){e.preventDefault();if(!e.repeat)jumpQueued=true;return;}
     if(e.code==='ShiftLeft'||e.code==='ShiftRight'){e.preventDefault();keys.add('run');runButton?.setAttribute('aria-pressed','true');return;}
     const key=keyMap[e.code];if(!key)return;e.preventDefault();setInput(key,true);
@@ -106,6 +129,7 @@ export function createWalker({scene,model,camera,controls,renderer,ground,ground
   for(const event of ['pointerup','pointercancel','lostpointercapture'])runButton?.addEventListener(event,()=>{keys.delete('run');runButton.setAttribute('aria-pressed','false');});
   jumpButton?.addEventListener('click',()=>{if(enabled&&!state.paused)jumpQueued=true;});
   function update(dt){
+    if(enabled&&!state.paused&&jumpStage==='ground')recoverPosition();
     const previousJump=jumpHeight,before=actor.position.clone(),direction=new THREE.Vector3();
     if(enabled&&!state.paused){
       if(keys.has('up')||keys.has('down')||keys.has('left')||keys.has('right')){
